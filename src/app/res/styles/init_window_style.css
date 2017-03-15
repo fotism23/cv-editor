@@ -1,0 +1,28 @@
+.window {
+    -fx-background-color: #49535b;
+}
+
+.app-label {
+    -fx-text-fill: #fffcff;
+    -fx-font-size: 22px;
+    -fx-text-alignment: center;
+    -fx-font-weight: bold;
+}
+
+.app-version {
+    -fx-text-fill: #9aacb4;
+}
+
+.list-button {
+    -fx-text-fill: #fffcff;
+    -fx-background-color: #49535b;
+}
+
+.list-button:hover {
+    -fx-text-fill: #c47616;
+    -fx-background-color: #49535b;
+}
+
+.list {
+    -fx-background-color: #49535b;
+}
