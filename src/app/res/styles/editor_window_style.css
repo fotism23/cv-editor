@@ -1,0 +1,33 @@
+.window {
+    -fx-background-color: #737d85;
+}
+
+.progress-indicator {
+    -fx-progress-color: #fffcff;
+}
+
+.menu-bar {
+    -fx-background-color: #394046;
+    -fx-text-fill: #fffcff;
+}
+.menu .label{
+    -fx-text-fill: #fffcff;
+}
+
+.my-menu {
+    -fx-background-color: #49535b;
+}
+
+.default-text {
+    -fx-font-weight: bold;
+    -fx-text-fill: #f5f5f5;
+}
+
+.default-text .label {
+    -fx-font-size: 22;
+}
+
+.main-text {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 20;
+}

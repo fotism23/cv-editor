@@ -1,12 +1,15 @@
-package app;
+package app.java;
 
-import app.utils.ApplicationUtils;
+import app.java.utils.ApplicationUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.text.Text;
+import javafx.scene.control.DialogPane;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -29,10 +32,11 @@ public class InitScene {
         this.m_stage = stage;
         Parent root = FXMLLoader.load(getClass().getResource(ApplicationUtils.INIT_WINDOW_LAYOUT_FXML));
         m_stage.setTitle(ApplicationUtils.APPLICATION_TITLE);
+
         m_stage.setResizable(false);
         m_scene = new Scene(root, ApplicationUtils.INIT_WINDOW_WIDTH, ApplicationUtils.INIT_WINDOW_HEIGHT);
         initializeButtons();
-
+        m_scene.setFill(Color.web("#ffffff"));
 
         return m_scene;
     }
@@ -53,16 +57,37 @@ public class InitScene {
     private void setButtonListeners() {
         createNewButton.setOnAction(event -> launchEditor(null));
         openButton.setOnAction(event -> {
-            FileChooser fileChooser = new FileChooser();
-            initializeFileChooser(fileChooser);
-            File file = fileChooser.showOpenDialog(m_stage);
-            launchEditor(file);
+            File file = getSelectedFile();
+            if (file != null) launchEditor(file);
         });
         aboutButton.setOnAction(event -> {
-            aboutPopupWindow = new Popup();
-            aboutPopupWindow.getContent().addAll(new Text("This is a Popup"));
-            aboutPopupWindow.show(m_stage);
+            showAlert();
         });
+    }
+
+    private File getSelectedFile() {
+        FileChooser fileChooser = new FileChooser();
+        initializeFileChooser(fileChooser);
+        return fileChooser.showOpenDialog(m_stage);
+    }
+
+    private void showAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("About");
+        alert.setHeaderText("CV Editor v.1.0");
+        ImageView img = new ImageView(this.getClass().getResource("res/drawable/cv_logo.png").toString());
+
+        img.setFitHeight(100);
+        img.setFitWidth(100);
+
+        alert.setWidth(200);
+        alert.setHeight(200);
+        alert.setGraphic(img);
+        alert.setContentText("Created By\nFotios Mitropoulos");
+        DialogPane pane = alert.getDialogPane();
+        pane.getStylesheets().add(getClass().getResource("res/styles/about_popup_style.css").toExternalForm());
+        pane.getStyleClass().add("myDialog");
+        alert.show();
     }
 
     private void initializeFileChooser(final FileChooser fileChooser) {
