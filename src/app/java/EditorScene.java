@@ -1,51 +1,64 @@
 package app.java;
 
-import app.java.data.Node;
 import app.java.utils.ApplicationUtils;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.File;
 
 public class EditorScene {
-    private Stage m_stage;
+    private Stage mStage;
     private boolean openFile;
     private File file;
     private Parent root;
-    private Scene m_scene;
+    private Scene mScene;
+    private boolean hasSavePath;
 
-    public EditorScene(boolean openFile, File file) {
-        if (openFile){
-            if (file != null) {
-                this.file = file;
-                openFile();
-            }
-        }
-
+    public EditorScene(boolean template, File file) {
+        if (template)
+            hasSavePath = false;
+        else
+            hasSavePath = true;
+            this.file = file;
     }
 
     public Scene initialize(Stage stage) throws Exception {
-        this.m_stage = stage;
+        this.mStage = stage;
         this.root = FXMLLoader.load(getClass().getResource(ApplicationUtils.EDITOR_WINDOW_LAYOUT_FXML));
-        m_stage.setTitle(ApplicationUtils.APPLICATION_TITLE);
-        m_stage.setResizable(true);
-        m_stage.setMinHeight(500);
-        m_stage.setMinWidth(500);
-        m_scene = new Scene(root, ApplicationUtils.EDITOR_WINDOW_WIDTH, ApplicationUtils.EDITOR_WINDOW_HEIGHT);
+        mStage.setTitle(ApplicationUtils.APPLICATION_TITLE);
+        mStage.setResizable(true);
+        mStage.setMinHeight(500);
+        mStage.setMinWidth(500);
+        mScene = new Scene(root, ApplicationUtils.EDITOR_WINDOW_WIDTH, ApplicationUtils.EDITOR_WINDOW_HEIGHT);
         //createCustomListView();
-        return m_scene;
+        return mScene;
+    }
+
+    private void saveAction() {
+        File file = null;
+        if (!hasSavePath) {
+            file = launchFileChooser();
+        }
+        if (file != null) {
+            this.file = file;
+            hasSavePath = true;
+            saveFile();
+        }
+    }
+
+    private File launchFileChooser() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Document");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("CV files", ApplicationUtils.APPLICATION_FILE_EXTENSION));
+        return fileChooser.showSaveDialog(mStage);
+    }
+
+    private void saveFile() {
+
     }
 
     private void openFile(){

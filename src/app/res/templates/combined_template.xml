@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<cv>
+    <file_info>
+        <date_created>19:03:2017:14:35</date_created>
+        <last_edit>19:03:2017:14:35</last_edit>
+        <template>1</template>
+    </file_info>
+    <document>
+        <enc_image></enc_image>
+        <node key="1">
+            <value>GENERAL INFORMATION</value>
+            <visible_key>true</visible_key>
+            <drawable_id>-1</drawable_id>
+            <name>Fotis Mitropoulos</name>
+            <address>Christovasili 34</address>
+            <phone>+306975998832</phone>
+            <mobile_phone>+306975998832</mobile_phone>
+            <email>fotismitropoulos@gmail.com</email>
+            <website></website>
+        </node>
+        <node key="2">
+            <value>PROFESSIONAL PROFILE</value>
+            <visible_key>true</visible_key>
+            <drawable_id>-1</drawable_id>
+        </node>
+        <node key="3">
+            <value>SKILLS AND EXPERIENCE</value>
+            <visible_key>true</visible_key>
+            <drawable_id>-1</drawable_id>
+            <children>
+                <node key="3.1">
+                    <value>SKILLS AND EXPERIENCE ON SOMETHING</value>
+                    <visible_key>true</visible_key>
+                    <drawable_id>-1</drawable_id>
+                    <children>
+                        <node key="3.1.1">
+                            <value>SKILLS AND EXPERIENCE ON SOMETHING</value>
+                            <visible_key>false</visible_key>
+                            <drawable_id>0</drawable_id>
+                        </node>
+                    </children>
+                </node>
+                <node key="3.2">
+                    <value>SKILLS AND EXPERIENCE ON SOMETHING ELSE</value>
+                    <visible_key>true</visible_key>
+                    <drawable_id>-1</drawable_id>
+                    <children>
+                        <node key="3.2.1">
+                            <value>SKILLS AND EXPERIENCE ON SOMETHING</value>
+                            <visible_key>false</visible_key>
+                            <drawable_id>0</drawable_id>
+                        </node>
+                    </children>
+                </node>
+            </children>
+        </node>
+        <node key="4">
+            <value>CAREER SUMMARY</value>
+            <visible_key>true</visible_key>
+            <drawable_id>-1</drawable_id>
+            <children>
+                <node key="4.1">
+                    <value>Company Name, Job Title, Date</value>
+                    <visible_key>false</visible_key>
+                    <drawable_id>0</drawable_id>
+                </node>
+            </children>
+        </node>
+        <node key="5">
+            <value>EDUCATION AND TRAINIG</value>
+            <visible_key>true</visible_key>
+            <drawable_id>-1</drawable_id>
+            <children>
+                <node key="5.1">
+                    <value>Qualification, Establishment, Location, Date</value>
+                    <visible_key>false</visible_key>
+                    <drawable_id>0</drawable_id>
+                </node>
+            </children>
+        </node>
+        <node key="6">
+            <value>FURTHER COURSES</value>
+            <visible_key>true</visible_key>
+            <drawable_id>-1</drawable_id>
+            <children>
+                <node key="6.1">
+                    <value>Course, Establishment, Location, Date</value>
+                    <visible_key>false</visible_key>
+                    <drawable_id>0</drawable_id>
+                </node>
+            </children>
+        </node>
+        <node key="7">
+            <value>FURTHER COURSES</value>
+            <visible_key>true</visible_key>
+            <drawable_id>-1</drawable_id>
+        </node>
+        <node key="8">
+            <value>INTERESTS</value>
+            <visible_key>true</visible_key>
+            <drawable_id>-1</drawable_id>
+        </node>
+    </document>
+</cv>

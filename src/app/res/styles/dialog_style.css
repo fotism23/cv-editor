@@ -17,3 +17,8 @@
     -fx-text-fill: #fffcff;
 }
 
+.button-bar > *{
+    -fx-background-color:  #49535b;
+    -fx-text-fill: #fffcff;
+}
+
