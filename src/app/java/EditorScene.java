@@ -1,12 +1,18 @@
 package app.java;
 
+import app.java.data.DataGenerator;
+import app.java.data.Node;
 import app.java.utils.ApplicationUtils;
+import app.java.utils.FileChooserUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.activation.UnsupportedDataTypeException;
 import java.io.File;
 
 public class EditorScene {
@@ -16,13 +22,18 @@ public class EditorScene {
     private Parent root;
     private Scene mScene;
     private boolean hasSavePath;
+    private boolean saved;
+    private DataGenerator dataGenerator;
 
     public EditorScene(boolean template, File file) {
-        if (template)
-            hasSavePath = false;
-        else
-            hasSavePath = true;
+        if (template){
+            this.hasSavePath = false;
+            this.saved = false;
+            this.file = null;
+        } else {
+            this.hasSavePath = true;
             this.file = file;
+        }
     }
 
     public Scene initialize(Stage stage) throws Exception {
@@ -37,11 +48,27 @@ public class EditorScene {
         return mScene;
     }
 
-    private void saveAction() {
-        File file = null;
-        if (!hasSavePath) {
-            file = launchFileChooser();
+    private void openAction() {
+        File file = FileChooserUtils.openFileChooser(mStage);
+        if (!saved){
+            saveAction();
         }
+        if (file != null){
+            this.file = file;
+            saveFile();
+        }
+    }
+
+    private void saveAction() {
+        if (!hasSavePath) {
+            saveAsAction();
+            return;
+        }
+        saveFile();
+    }
+
+    private void saveAsAction() {
+        File file = FileChooserUtils.saveAsFileChooser(mStage);
         if (file != null) {
             this.file = file;
             hasSavePath = true;
@@ -49,20 +76,26 @@ public class EditorScene {
         }
     }
 
-    private File launchFileChooser() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Document");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("CV files", ApplicationUtils.APPLICATION_FILE_EXTENSION));
-        return fileChooser.showSaveDialog(mStage);
+    public void exportAction() {
+
     }
 
     private void saveFile() {
-
+        saved = true;
     }
 
-    private void openFile(){
+    private void openFile() throws UnsupportedDataTypeException {
+        dataGenerator = new DataGenerator(file.getPath(), ApplicationUtils.XML_TYPE_ID);
+        showData();
+    }
 
+
+    private void showData() {
+        createCustomListView();
+    }
+
+    private void createCustomListView() {
+        
     }
 
     /*
@@ -93,4 +126,6 @@ public class EditorScene {
         anchorPane.getChildren().add(listView);
     }
     */
+
+
 }

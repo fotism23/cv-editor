@@ -1,23 +1,16 @@
 package app.java;
 
 import app.java.utils.ApplicationUtils;
+import app.java.utils.FileChooserUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.DialogPane;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -31,23 +24,14 @@ public class InitScene {
 
     private EditorScene editorScene;
 
-    private Popup aboutPopupWindow;
-
     public Scene initialize(Stage stage) throws Exception{
         this.mStage = stage;
         Parent root = FXMLLoader.load(getClass().getResource(ApplicationUtils.INIT_WINDOW_LAYOUT_FXML));
         mStage.setTitle(ApplicationUtils.APPLICATION_TITLE);
-
         mStage.setResizable(false);
         mScene = new Scene(root, ApplicationUtils.INIT_WINDOW_WIDTH, ApplicationUtils.INIT_WINDOW_HEIGHT);
         initializeButtons();
-        mScene.setFill(Color.web("#ffffff"));
-
         return mScene;
-    }
-
-    public void setEditorScene(EditorScene editorScene) {
-        this.editorScene = editorScene;
     }
 
     public void initializeButtons() {
@@ -59,60 +43,19 @@ public class InitScene {
     }
 
     private void setButtonListeners() {
-        createNewButton.setOnAction(event -> showTemplateOptionDialog());
-        openButton.setOnAction(event -> {
-            File file = getSelectedFile();
-            if (file != null) launchEditor(file);
-        });
-        aboutButton.setOnAction(event -> {
-            showAboutDialog();
-        });
+        createNewButton.setOnAction(event -> createNewAction());
+        openButton.setOnAction(event -> openAction());
+        aboutButton.setOnAction(event -> ApplicationUtils.showAboutDialog()
+        );
     }
 
-    private File getSelectedFile() {
-        FileChooser fileChooser = new FileChooser();
-        initializeFileChooser(fileChooser);
-        return fileChooser.showOpenDialog(mStage);
+    private void openAction() {
+        File file = FileChooserUtils.openFileChooser(mStage);
+        if (file != null) launchEditor(file);
     }
 
-    private void showAboutDialog() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("About");
-        alert.setHeaderText("CV Editor v.1.0");
-        ImageView img = new ImageView(this.getClass().getResource("../res/drawable/cv_logo.png").toString());
-
-        img.setFitHeight(100);
-        img.setFitWidth(100);
-
-        alert.setWidth(200);
-        alert.setHeight(200);
-        alert.setGraphic(img);
-        alert.setContentText("Created By\nFotios Mitropoulos");
-        DialogPane pane = alert.getDialogPane();
-        pane.getStylesheets().add(getClass().getResource("../res/styles/dialog_style.css").toExternalForm());
-        pane.getStyleClass().add("myDialog");
-        alert.show();
-    }
-
-    private void showTemplateOptionDialog() {
-        List<String> choices = new ArrayList<>();
-        choices.add("Functional CV");
-        choices.add("Chronological CV");
-        choices.add("Combined CV");
-
-        ImageView img = new ImageView(this.getClass().getResource("../res/drawable/cv_logo.png").toString());
-        img.setFitHeight(100);
-        img.setFitWidth(100);
-
-        ChoiceDialog<String> dialog = new ChoiceDialog<>("Functional CV", choices);
-        dialog.setTitle("Template Selection");
-        dialog.setHeaderText("Select one of the following choices");
-        dialog.setContentText("Template:");
-        dialog.setGraphic(img);
-        dialog.getDialogPane().getStylesheets().add(getClass().getResource("../res/styles/dialog_style.css").toExternalForm());
-        dialog.getDialogPane().getStyleClass().add("myDialog");
-
-        Optional<String> result = dialog.showAndWait();
+    private void createNewAction() {
+        Optional<String> result = ApplicationUtils.showTemplateOptionDialog();
 
         if (result.isPresent()) {
             if (result.get().equals("Functional CV"))
@@ -124,15 +67,8 @@ public class InitScene {
         }
     }
 
-    private void initializeFileChooser(final FileChooser fileChooser) {
-        fileChooser.setTitle("Select File");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("CV files", ApplicationUtils.APPLICATION_FILE_EXTENSION),
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
-    }
-
     private void launchEditorWithTemplate(File file) {
-        editorScene = new EditorScene(true, null);
+        editorScene = new EditorScene(true, file);
         try {
             mStage.setScene(editorScene.initialize(mStage));
         } catch (Exception e) {

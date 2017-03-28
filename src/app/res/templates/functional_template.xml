@@ -22,6 +22,7 @@
 			<value>PROFESSIONAL PROFILE</value>
 			<visible_key>true</visible_key>
 			<drawable_id>-1</drawable_id>
+			<content></content>
 		</node>
 		<node key="3">
 			<value>SKILLS AND EXPERIENCE</value>
@@ -67,7 +68,7 @@
 			</children>
 		</node>
 		<node key="5">
-			<value>EDUCATION AND TRAINIG</value>
+			<value>EDUCATION AND TRAINING</value>
 			<visible_key>true</visible_key>
 			<drawable_id>-1</drawable_id>
 			<children>
@@ -91,14 +92,16 @@
 			</children>
 		</node>
 		<node key="7">
-			<value>FURTHER COURSES</value>
+			<value>ADDITIONAL INFORMATION</value>
 			<visible_key>true</visible_key>
 			<drawable_id>-1</drawable_id>
+			<content></content>
 		</node>
 		<node key="8">
 			<value>INTERESTS</value>
 			<visible_key>true</visible_key>
 			<drawable_id>-1</drawable_id>
+			<content></content>
 		</node>
 	</document>
 </cv>

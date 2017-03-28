@@ -24,6 +24,7 @@ public class Node {
     private TextField valueTextField;
     private boolean isKeyVisible;
     private int drawableId;
+    private String content;
 
     public Node(String key, String value) {
         this.key = key;
@@ -115,6 +116,8 @@ public class Node {
         };
     }
 
-
-
+    public void setContent(String content) {
+        this.content = content;
+    }
+    
 }
