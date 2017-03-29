@@ -1,6 +1,9 @@
 package app.java.data;
 
 import app.java.utils.ApplicationUtils;
+import app.java.utils.exporters.Exporter;
+import app.java.utils.exporters.LatexExporter;
+import app.java.utils.exporters.XmlExporter;
 import app.java.utils.parsers.Parser;
 import app.java.utils.parsers.XmlParser;
 import javafx.collections.FXCollections;
@@ -16,10 +19,14 @@ public class DataGenerator {
     private ArrayList<Node> data;
     private HashMap<String, String> personalInfo;
     private int template;
+    private Exporter exporter;
+    private String path;
 
     public DataGenerator(String path, int parseType) throws UnsupportedDataTypeException {
-        if (parseType == ApplicationUtils.XML_TYPE_ID)
+        if (parseType == ApplicationUtils.XML_TYPE_ID){
             this.parser = new XmlParser(path);
+            this.path = path;
+        }
         else
             throw new UnsupportedDataTypeException(parseType + " data type is not supported.");
         personalInfo = new HashMap<>();
@@ -76,6 +83,52 @@ public class DataGenerator {
         data.add(parser.parseFurtherCourses());
         data.add(parser.parseAdditionalInfo());
         data.add(parser.parseInterests());
+    }
+
+    private void exportXml() {
+        if (template == ApplicationUtils.FUNCTIONAL_TEMPLATE_ID)
+            exportFunctional(new XmlExporter(path));
+        else if (template == ApplicationUtils.CHRONOLOGICAL_TEMPLATE_ID)
+            exportChronological(new XmlExporter(path));
+        else if (template == ApplicationUtils.COMBINED_TEMPLATE_ID)
+            exportCombined(new XmlExporter(path));
+        else
+            throw new UnsupportedOperationException("Invalid template ID.");
+    }
+
+    private void exportLatex(String exportTarget) {
+        if (template == ApplicationUtils.FUNCTIONAL_TEMPLATE_ID)
+            exportFunctional(new LatexExporter(exportTarget));
+        else if (template == ApplicationUtils.CHRONOLOGICAL_TEMPLATE_ID)
+            exportChronological(new LatexExporter(exportTarget));
+        else if (template == ApplicationUtils.COMBINED_TEMPLATE_ID)
+            exportCombined(new LatexExporter(exportTarget));
+        else
+            throw new UnsupportedOperationException("Invalid template ID.");
+    }
+
+    private void exportFunctional(Exporter exporter) {
+        exporter.exportProfessionalProfile();
+        exporter.exportSkillsAndExperience();
+        exporter.exportCareerSummary();
+        exporter.exportEducationAndTraining();
+        exporter.exportFurtherCourses();
+        exporter.exportAdditionalInfo();
+        exporter.exportInterests();
+    }
+
+    private void exportChronological(Exporter exporter) {
+        exporter.exportProfessionalProfile();
+        exporter.exportCoreStrengths();
+        exporter.exportProfessionalExperience();
+        exporter.exportEducationAndTraining();
+        exporter.exportFurtherCourses();
+        exporter.exportAdditionalInfo();
+        exporter.exportInterests();
+    }
+
+    private void exportCombined(Exporter exporter) {
+
     }
 
     public void retrieveTemplate() {
