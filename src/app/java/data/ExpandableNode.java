@@ -8,6 +8,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 public class ExpandableNode extends Node {
@@ -28,6 +29,10 @@ public class ExpandableNode extends Node {
 
     public void addChild(Node item) {
         childrenData.add(item);
+    }
+
+    public void addChildren(ArrayList<Node> items) {
+        childrenData.addAll(items);
     }
 
     public boolean removeChild(String key) {

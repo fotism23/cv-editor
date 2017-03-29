@@ -1,3 +1,7 @@
+.root {
+    -fx-background-color: #737d85;
+}
+
 .window {
     -fx-background-color: #737d85;
 }
@@ -10,11 +14,16 @@
     -fx-background-color: #394046;
     -fx-text-fill: #fffcff;
 }
+
+.menu-bar .menu-item {
+    -fx-background-color: #49535b;
+}
+
 .menu .label{
     -fx-text-fill: #fffcff;
 }
 
-.my-menu {
+.context-menu {
     -fx-background-color: #49535b;
 }
 
@@ -31,3 +40,16 @@
     -fx-text-fill: #ffffff;
     -fx-font-size: 20;
 }
+
+.check-menu-item:default
+{
+    -fx-focused-mark-color: blue ;
+}
+
+.check-menu-item:focused
+{
+    -fx-focused-mark-color: blue ;
+}
+
+
+

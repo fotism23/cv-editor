@@ -1,6 +1,7 @@
 package app.java.utils.parsers;
 
 import java.io.File;
+import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
@@ -106,14 +107,13 @@ public class XmlParser implements Parser {
     public Node parseProfessionalProfile() {
         Element docElement = document.getElementById("document");
         NodeList nList = docElement.getElementsByTagName("node");
-
         for (int temp = 0; temp < nList.getLength(); temp++) {
             org.w3c.dom.Node nNode = nList.item(temp);
             if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE ) {
                 Element eElement = (Element) nNode;
                 if (eElement.getElementsByTagName("value").item(0).getTextContent().equals("PROFESSIONAL PROFILE")){
                     Node node = new Node(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
-                    node.setContent(eElement.getElementsByTagName("content").item(0).getTextContent());
+                    node.setContent(retrieveContent(eElement));
                     return node;
                 }
             }
@@ -126,15 +126,14 @@ public class XmlParser implements Parser {
     public Node parseSkillsAndExperience() {
         Element docElement = document.getElementById("document");
         NodeList nList = docElement.getElementsByTagName("node");
-
         for (int temp = 0; temp < nList.getLength(); temp++) {
             org.w3c.dom.Node nNode = nList.item(temp);
             if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE ) {
                 Element eElement = (Element) nNode;
                 if (eElement.getElementsByTagName("value").item(0).getTextContent().equals("SKILLS AND EXPERIENCE")){
                     Node node = new ExpandableNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
-                    // todo add children
-                    //node.setContent(eElement.getElementsByTagName("content").item(0).getTextContent());
+                    Element elem = (Element) eElement.getElementsByTagName("children").item(0);
+                    ((ExpandableNode) node).addChildren(getChildren(elem));
                     return node;
                 }
             }
@@ -146,15 +145,14 @@ public class XmlParser implements Parser {
     public Node parseCareerSummary() {
         Element docElement = document.getElementById("document");
         NodeList nList = docElement.getElementsByTagName("node");
-
         for (int temp = 0; temp < nList.getLength(); temp++) {
             org.w3c.dom.Node nNode = nList.item(temp);
             if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE ) {
                 Element eElement = (Element) nNode;
                 if (eElement.getElementsByTagName("value").item(0).getTextContent().equals("CAREER SUMMARY")){
                     Node node = new ExpandableNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
-                    // todo add children
-                    //node.setContent(eElement.getElementsByTagName("content").item(0).getTextContent());
+                    Element elem = (Element) eElement.getElementsByTagName("children").item(0);
+                    ((ExpandableNode) node).addChildren(getChildren(elem));
                     return node;
                 }
             }
@@ -166,15 +164,14 @@ public class XmlParser implements Parser {
     public Node parseEducationAndTraining() {
         Element docElement = document.getElementById("document");
         NodeList nList = docElement.getElementsByTagName("node");
-
         for (int temp = 0; temp < nList.getLength(); temp++) {
             org.w3c.dom.Node nNode = nList.item(temp);
             if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE ) {
                 Element eElement = (Element) nNode;
                 if (eElement.getElementsByTagName("value").item(0).getTextContent().equals("EDUCATION AND TRAINING")){
                     Node node = new ExpandableNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
-                    // todo add children
-                    //node.setContent(eElement.getElementsByTagName("content").item(0).getTextContent());
+                    Element elem = (Element) eElement.getElementsByTagName("children").item(0);
+                    ((ExpandableNode) node).addChildren(getChildren(elem));
                     return node;
                 }
             }
@@ -186,18 +183,36 @@ public class XmlParser implements Parser {
     public Node parseFurtherCourses() {
         Element docElement = document.getElementById("document");
         NodeList nList = docElement.getElementsByTagName("node");
-
         for (int temp = 0; temp < nList.getLength(); temp++) {
             org.w3c.dom.Node nNode = nList.item(temp);
             if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE ) {
                 Element eElement = (Element) nNode;
                 if (eElement.getElementsByTagName("value").item(0).getTextContent().equals("FURTHER COURSES")){
                     Node node = new ExpandableNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
-                    // todo add children
-                    //node.setContent(eElement.getElementsByTagName("content").item(0).getTextContent());
+                    Element elem = (Element) eElement.getElementsByTagName("children").item(0);
+                    ((ExpandableNode) node).addChildren(getChildren(elem));
                     return node;
                 }
             }
+        }
+        return null;
+    }
+
+    private ArrayList<Node> getChildren(Element eElement) {
+        ArrayList<Node> children = new ArrayList<>();
+        if (eElement.hasChildNodes()) {
+            NodeList nList = eElement.getElementsByTagName("node");
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+                org.w3c.dom.Node nNode = nList.item(temp);
+                if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE ) {
+                    Element elem = (Element) nNode;
+                    Node node = new ExpandableNode(elem.getAttribute("key"), elem.getElementsByTagName("value").item(0).getTextContent());
+                    Element element = (Element) elem.getElementsByTagName("children").item(0);
+                    ((ExpandableNode) node).addChildren(getChildren(element));
+                    children.add(node);
+                }
+            }
+            return children;
         }
         return null;
     }
@@ -206,15 +221,13 @@ public class XmlParser implements Parser {
     public Node parseAdditionalInfo() {
         Element docElement = document.getElementById("document");
         NodeList nList = docElement.getElementsByTagName("node");
-
         for (int temp = 0; temp < nList.getLength(); temp++) {
             org.w3c.dom.Node nNode = nList.item(temp);
             if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE ) {
                 Element eElement = (Element) nNode;
                 if (eElement.getElementsByTagName("value").item(0).getTextContent().equals("ADDITIONAL INFORMATION")){
-                    Node node = new ExpandableNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
-                    // todo add children
-                    //node.setContent(eElement.getElementsByTagName("content").item(0).getTextContent());
+                    Node node = new Node(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
+                    node.setContent(retrieveContent(eElement));
                     return node;
                 }
             }
@@ -232,9 +245,8 @@ public class XmlParser implements Parser {
             if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE ) {
                 Element eElement = (Element) nNode;
                 if (eElement.getElementsByTagName("value").item(0).getTextContent().equals("INTERESTS")){
-                    Node node = new ExpandableNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
-                    // todo add children
-                    //node.setContent(eElement.getElementsByTagName("content").item(0).getTextContent());
+                    Node node = new Node(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
+                    node.setContent(retrieveContent(eElement));
                     return node;
                 }
             }
@@ -253,7 +265,7 @@ public class XmlParser implements Parser {
                 Element eElement = (Element) nNode;
                 if (eElement.getElementsByTagName("value").item(0).getTextContent().equals("CORE STRENGTHS")){
                     Node node = new Node(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
-                    node.setContent(eElement.getElementsByTagName("content").item(0).getTextContent());
+                    node.setContent(retrieveContent(eElement));
                     return node;
                 }
             }
@@ -264,6 +276,25 @@ public class XmlParser implements Parser {
 
     @Override
     public Node parseProfessionalExperience() {
+        Element docElement = document.getElementById("document");
+        NodeList nList = docElement.getElementsByTagName("node");
+        for (int temp = 0; temp < nList.getLength(); temp++) {
+            org.w3c.dom.Node nNode = nList.item(temp);
+            if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE ) {
+                Element eElement = (Element) nNode;
+                if (eElement.getElementsByTagName("value").item(0).getTextContent().equals("PROFESSIONAL EXPERIENCE")){
+                    Node node = new ExpandableNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
+                    Element elem = (Element) eElement.getElementsByTagName("children").item(0);
+                    ((ExpandableNode) node).addChildren(getChildren(elem));
+                    return node;
+                }
+            }
+        }
         return null;
     }
+
+    private String retrieveContent(Element eElement) {
+        return eElement.getElementsByTagName("content").item(0).getTextContent();
+    }
+
 }

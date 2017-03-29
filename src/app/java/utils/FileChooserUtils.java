@@ -26,6 +26,20 @@ public abstract class FileChooserUtils {
         return fileChooser.showSaveDialog(stage);
     }
 
+    public static File openImageFileChooser(Stage stage) {
+        FileChooser fileChooser = new FileChooser();
+        initializeOpenImageFileChooser(fileChooser);
+        return fileChooser.showOpenDialog(stage);
+    }
+
+    private static void initializeOpenImageFileChooser(FileChooser fileChooser) {
+        fileChooser.setTitle("Select Image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JPEG", "*.jpeg"),
+                new FileChooser.ExtensionFilter("PNG", "**.png"));
+
+    }
+
     private static void initializeSelectFileChooser(final FileChooser fileChooser) {
         fileChooser.setTitle("Select File");
         fileChooser.getExtensionFilters().addAll(

@@ -34,7 +34,7 @@ public class InitScene {
         return mScene;
     }
 
-    public void initializeButtons() {
+    private void initializeButtons() {
         createNewButton = (Button) mScene.lookup("#createNew");
         openButton = (Button) mScene.lookup("#open");
         compareButton = (Button) mScene.lookup("#compare");
