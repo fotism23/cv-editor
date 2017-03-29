@@ -83,7 +83,6 @@ public class DataGenerator {
     }
 
     private void generatePersonalInfoNode() {
-
         personalInfo.put(ApplicationUtils.PERSONAL_INFO_NAME, parser.parseName());
         personalInfo.put(ApplicationUtils.PERSONAL_INFO_ADDRESS, parser.parseAddress());
         personalInfo.put(ApplicationUtils.PERSONAL_INFO_HOME, parser.parseHomePhone());

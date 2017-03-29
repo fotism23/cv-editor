@@ -1,6 +1,5 @@
 package app.java.utils;
 
-
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -34,10 +33,8 @@ public abstract class FileChooserUtils {
 
     private static void initializeOpenImageFileChooser(FileChooser fileChooser) {
         fileChooser.setTitle("Select Image");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("JPEG", "*.jpeg"),
-                new FileChooser.ExtensionFilter("PNG", "**.png"));
-
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("JPEG", "*.jpeg"));
     }
 
     private static void initializeSelectFileChooser(final FileChooser fileChooser) {

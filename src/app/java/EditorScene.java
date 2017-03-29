@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import javax.activation.UnsupportedDataTypeException;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.Optional;
 
 public class EditorScene {
     private Stage mStage;
@@ -96,7 +97,8 @@ public class EditorScene {
 
     private void initializeFileMenu() {
         MenuItem newMenuItem = new CheckMenuItem("New");
-        // todo menu item listener
+        newMenuItem.setOnAction(event -> newAction());
+
         MenuItem openMenuItem = new CheckMenuItem("Open");
         openMenuItem.setOnAction(event -> openAction());
 
@@ -120,6 +122,30 @@ public class EditorScene {
         else{
             saveAction();
             mStage.close();
+        }
+    }
+
+    private void newAction() {
+        if (!saved){
+            saveAction();
+        }
+
+        Optional<String> result = ApplicationUtils.showTemplateOptionDialog();
+
+        if (result.isPresent()) {
+            if (result.get().equals("Functional CV"))
+                this.file = new File(ApplicationUtils.FUNCTIONAL_TEMPLATE_PATH);
+            else if (result.get().equals("Combined CV"))
+                this.file = new File(ApplicationUtils.COMBINED_TEMPLATE_PATH);
+            else
+                this.file = new File(ApplicationUtils.CHRONOLOGICAL_TEMPLATE_PATH);
+        }
+        if (file == null) return;
+        hasSavePath = false;
+        try {
+            openFile();
+        } catch (UnsupportedDataTypeException e) {
+            e.printStackTrace();
         }
     }
 
