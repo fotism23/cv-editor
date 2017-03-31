@@ -2,9 +2,12 @@ package app.java.utils.parsers;
 
 
 import app.java.data.Node;
+import javafx.scene.image.Image;
 
 public interface Parser {
     int parseTemplate();
+
+    Image parseImage();
 
     String parseName();
     String parseAddress();

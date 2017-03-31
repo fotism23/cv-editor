@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import javax.activation.UnsupportedDataTypeException;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.security.InvalidKeyException;
 import java.util.Optional;
 
 public class EditorScene {
@@ -38,7 +39,7 @@ public class EditorScene {
         if (template){
             this.hasSavePath = false;
             this.saved = true;
-            this.file = null;
+            this.file = file;
         } else {
             this.hasSavePath = true;
             this.file = file;
@@ -54,11 +55,11 @@ public class EditorScene {
         mStage.setMinWidth(500);
         mStage.setOnCloseRequest(event -> closeAction());
         mScene = new Scene(root, ApplicationUtils.EDITOR_WINDOW_WIDTH, ApplicationUtils.EDITOR_WINDOW_HEIGHT);
-        //createCustomListView();
         this.canEdit = true;
         initializeTextFields();
         initializeMenuItems();
         initializeImageView();
+        openFile();
         return mScene;
     }
 
@@ -72,21 +73,6 @@ public class EditorScene {
         toggleEdit();
     }
 
-    private void initializeImageView() {
-        avatarImageView = (ImageView) mScene.lookup("#imageView");
-        avatarImageView.maxHeight(169);
-        avatarImageView.maxHeight(169);
-        avatarImageView.setOnMouseClicked(event -> {
-            File file =  FileChooserUtils.openImageFileChooser(mStage);
-            if (file == null) return;
-            try {
-                avatarImageView.setImage(new Image(file.toURL().toString()));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
     private void initializeMenuItems() {
         menuBar = (MenuBar) mScene.lookup("#edit");
         initializeFileMenu();
@@ -95,26 +81,60 @@ public class EditorScene {
         initializeHelpMenu();
     }
 
+    private void initializeImageView() {
+        avatarImageView = (ImageView) mScene.lookup("#imageView");
+        avatarImageView.maxHeight(169);
+        avatarImageView.maxHeight(169);
+        avatarImageView.setOnMouseClicked(event -> {
+            File file =  FileChooserUtils.openImageFileChooser(mStage);
+            if (file == null) return;
+            try {
+                Image image = new Image(file.toURL().toString());
+                avatarImageView.setImage(image);
+                dataGenerator.setProfImage(image);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     private void initializeFileMenu() {
-        MenuItem newMenuItem = new CheckMenuItem("New");
+        MenuItem newMenuItem = new MenuItem("New");
         newMenuItem.setOnAction(event -> newAction());
 
-        MenuItem openMenuItem = new CheckMenuItem("Open");
+        MenuItem openMenuItem = new MenuItem("Open");
         openMenuItem.setOnAction(event -> openAction());
 
-        MenuItem saveMenuItem = new CheckMenuItem("Save");
+        MenuItem saveMenuItem = new MenuItem("Save");
         saveMenuItem.setOnAction(event -> saveAction());
 
-        MenuItem saveAsMenuItem = new CheckMenuItem("Save As");
+        MenuItem saveAsMenuItem = new MenuItem("Save As");
         saveAsMenuItem.setOnAction(event -> saveAsAction());
 
-        MenuItem exportMenuItem = new CheckMenuItem("Export");
+        MenuItem exportMenuItem = new MenuItem("Export");
         exportMenuItem.setOnAction(event -> exportAction());
 
-        MenuItem closeMenuItem = new CheckMenuItem("Close");
+        MenuItem closeMenuItem = new MenuItem("Close");
         closeMenuItem.setOnAction(event -> closeAction());
 
         menuBar.getMenus().get(0).getItems().addAll(newMenuItem, openMenuItem, saveMenuItem, saveAsMenuItem, exportMenuItem, closeMenuItem);
+    }
+
+    private void initializeEditMenu() {
+        CheckMenuItem toggleEdit = new CheckMenuItem("Toggle Edit");
+        toggleEdit.setSelected(canEdit);
+        toggleEdit.selectedProperty().addListener((observable, oldValue, newValue) -> toggleEdit());
+        menuBar.getMenus().get(1).getItems().addAll(toggleEdit);
+    }
+
+    private void initializeViewMenu() {
+
+    }
+
+    private void initializeHelpMenu() {
+        MenuItem aboutMenuItem = new MenuItem("About");
+        aboutMenuItem.setOnAction(event -> ApplicationUtils.showAboutDialog());
+        menuBar.getMenus().get(3).getItems().add(aboutMenuItem);
     }
 
     private void closeAction() {
@@ -129,16 +149,21 @@ public class EditorScene {
         if (!saved){
             saveAction();
         }
-
         Optional<String> result = ApplicationUtils.showTemplateOptionDialog();
-
         if (result.isPresent()) {
-            if (result.get().equals("Functional CV"))
-                this.file = new File(ApplicationUtils.FUNCTIONAL_TEMPLATE_PATH);
-            else if (result.get().equals("Combined CV"))
-                this.file = new File(ApplicationUtils.COMBINED_TEMPLATE_PATH);
-            else
-                this.file = new File(ApplicationUtils.CHRONOLOGICAL_TEMPLATE_PATH);
+            switch (result.get()) {
+                case "Functional CV":
+                    this.file = new File(ApplicationUtils.FUNCTIONAL_TEMPLATE_PATH);
+                    break;
+                case "Combined CV":
+                    this.file = new File(ApplicationUtils.COMBINED_TEMPLATE_PATH);
+                    break;
+                case "Chronological CV":
+                    this.file = new File(ApplicationUtils.CHRONOLOGICAL_TEMPLATE_PATH);
+                    break;
+                default:
+                    throw new UnsupportedOperationException("This template type is not supported.");
+            }
         }
         if (file == null) return;
         hasSavePath = false;
@@ -147,24 +172,6 @@ public class EditorScene {
         } catch (UnsupportedDataTypeException e) {
             e.printStackTrace();
         }
-    }
-
-    private void initializeViewMenu() {
-        MenuItem aboutMenuItem = new CheckMenuItem("About");
-        aboutMenuItem.setOnAction(event -> ApplicationUtils.showAboutDialog());
-        menuBar.getMenus().get(3).getItems().add(aboutMenuItem);
-    }
-
-    private void initializeHelpMenu() {
-
-    }
-
-    private void initializeEditMenu() {
-        CheckMenuItem toggleEdit = new CheckMenuItem("Toggle Edit");
-        toggleEdit.setSelected(canEdit);
-        //toggleEdit.set
-        toggleEdit.selectedProperty().addListener((observable, oldValue, newValue) -> toggleEdit());
-        menuBar.getMenus().get(1).getItems().addAll(toggleEdit);
     }
 
     private void toggleEdit() {
@@ -209,21 +216,57 @@ public class EditorScene {
     }
 
     private void exportAction() {
-
+        try {
+            dataGenerator.exportData(file.getPath(), ApplicationUtils.LATEX_TYPE_ID);
+        } catch (UnsupportedDataTypeException e) {
+            e.printStackTrace();
+        }
     }
 
     private void saveFile() {
         saved = true;
+        try {
+            dataGenerator.exportData(file.getPath(), ApplicationUtils.XML_TYPE_ID);
+        } catch (UnsupportedDataTypeException e) {
+            e.printStackTrace();
+        }
     }
 
     private void openFile() throws UnsupportedDataTypeException {
-        dataGenerator = new DataGenerator(file.getPath(), ApplicationUtils.XML_TYPE_ID);
+        dataGenerator = new DataGenerator();
+        dataGenerator.importData(file.getPath(), ApplicationUtils.XML_TYPE_ID);
         showData();
     }
 
-
     private void showData() {
+        showPersonalInfo();
+        showProfImage();
         createCustomListView();
+    }
+
+    private void showProfImage() {
+        Image image = dataGenerator.getProfImage();
+        if (image == null)
+            showDefaultImage();
+        else
+            avatarImageView.setImage(image);
+    }
+
+    private void showDefaultImage() {
+        avatarImageView.setImage(new Image(getClass().getResource("../res/drawable/cv_logo.png").toString()));
+    }
+
+    private void showPersonalInfo() {
+        try {
+            nameTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_NAME));
+            addressTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_ADDRESS));
+            phoneTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_HOME));
+            mobileTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_MOBILE));
+            emailTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_EMAIL));
+            websiteTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_WEBSITE));
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
     }
 
     private void createCustomListView() {

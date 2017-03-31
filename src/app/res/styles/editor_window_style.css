@@ -15,6 +15,7 @@
     -fx-text-fill: #fffcff;
 }
 
+
 .menu-bar .menu-item {
     -fx-background-color: #49535b;
 }
@@ -25,6 +26,19 @@
 
 .context-menu {
     -fx-background-color: #49535b;
+    -fx-text-fill: #ffffff;
+}
+
+.context-menu .label{
+    -fx-text-fill: #ffffff;
+}
+
+.separator{
+    -fx-background-color: #49535b;
+}
+
+.menu-bar .menu-item:hover {
+    -fx-background-color: #0096c9;
 }
 
 .default-text {
@@ -41,14 +55,9 @@
     -fx-font-size: 20;
 }
 
-.check-menu-item:default
+.check-menu-item
 {
-    -fx-focused-mark-color: blue ;
-}
-
-.check-menu-item:focused
-{
-    -fx-focused-mark-color: blue ;
+    -fx-mark-color: #ffffff ;
 }
 
 

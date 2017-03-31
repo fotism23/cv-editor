@@ -36,9 +36,9 @@ public final class ApplicationUtils {
     public static final String BLACK_DOT_PATH = "../res/drawable/black_dot.png";
     public static final String WHITE_DOT_PATH = "../res/drawable/white_dot.png";
 
-    public static final String FUNCTIONAL_TEMPLATE_PATH = "../res/templates/functional_template.xml";
-    public static final String CHRONOLOGICAL_TEMPLATE_PATH = "../res/templates/chronological_template.xml";
-    public static final String COMBINED_TEMPLATE_PATH = "../res/templates/combined_template.xml";
+    public static final String FUNCTIONAL_TEMPLATE_PATH = "src/app/res/templates/functional_template.xml";
+    public static final String CHRONOLOGICAL_TEMPLATE_PATH = "src/app/res/templates/chronological_template.xml";
+    public static final String COMBINED_TEMPLATE_PATH = "src/app/res/templates/combined_template.xml";
 
     public static final String LATEX_FILE_EXTENSION = ".tex";
     public static final String TEXT_FILE_EXTENSION = ".txt";
@@ -54,6 +54,7 @@ public final class ApplicationUtils {
     public static final int COMBINED_TEMPLATE_ID = 2;
 
     public static final int XML_TYPE_ID = 0;
+    public static final int LATEX_TYPE_ID = 1;
 
     public static final String PERSONAL_INFO_NAME = "name";
     public static final String PERSONAL_INFO_ADDRESS = "address";
@@ -62,7 +63,7 @@ public final class ApplicationUtils {
     public static final String PERSONAL_INFO_EMAIL = "email";
     public static final String PERSONAL_INFO_WEBSITE = "website";
 
-    public String encodeImageToBase64(Image image) throws IOException {
+    public static String encodeImageToBase64(Image image) throws IOException {
         BufferedImage swingImage = SwingFXUtils.fromFXImage(image, null);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(swingImage, "png", byteArrayOutputStream);

@@ -1,83 +1,73 @@
 package app.java.utils.exporters;
 
+import app.java.data.Node;
+import javafx.scene.image.Image;
+
+import java.util.HashMap;
+
 public class LatexExporter implements Exporter {
 
-    public LatexExporter(String filePath) {
+    public LatexExporter(String path) {
 
     }
 
     @Override
-    public void exportName() {
+    public void exportImage(Image image) {
 
     }
 
     @Override
-    public void exportAddress() {
+    public void exportPersonalInfo(HashMap<String, String> hashMap) {
 
     }
 
     @Override
-    public void exportHomePhone() {
+    public void exportProfessionalProfile(Node node) {
 
     }
 
     @Override
-    public void exportMobilePhone() {
+    public void exportSkillsAndExperience(Node node) {
 
     }
 
     @Override
-    public void exportEmail() {
+    public void exportCareerSummary(Node node) {
 
     }
 
     @Override
-    public void exportWebsite() {
+    public void exportEducationAndTraining(Node node) {
 
     }
 
     @Override
-    public void exportProfessionalProfile() {
+    public void exportFurtherCourses(Node node) {
 
     }
 
     @Override
-    public void exportSkillsAndExperience() {
+    public void exportAdditionalInfo(Node node) {
 
     }
 
     @Override
-    public void exportCareerSummary() {
+    public void exportInterests(Node node) {
 
     }
 
     @Override
-    public void exportEducationAndTraining() {
+    public void exportCoreStrengths(Node node) {
 
     }
 
     @Override
-    public void exportFurtherCourses() {
+    public void exportProfessionalExperience(Node node) {
 
     }
 
     @Override
-    public void exportAdditionalInfo() {
-
-    }
-
-    @Override
-    public void exportInterests() {
-
-    }
-
-    @Override
-    public void exportCoreStrengths() {
-
-    }
-
-    @Override
-    public void exportProfessionalExperience() {
+    public void commit() {
 
     }
 }

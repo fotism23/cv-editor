@@ -1,6 +1,7 @@
 package app.java.data;
 
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -20,6 +21,7 @@ public class ExpandableNode extends Node {
     public ExpandableNode(String key, String value) {
         super(key, value);
         super.TAG = this.getClass().getName();
+        childrenData = FXCollections.observableArrayList();
     }
 
     public ObservableList<Node> getChildren() {
