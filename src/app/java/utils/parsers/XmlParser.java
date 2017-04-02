@@ -271,9 +271,8 @@ public class XmlParser implements Parser {
             org.w3c.dom.Node nNode = nList.item(temp);
             if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                 Element eElement = (Element) nNode;
-                if (eElement.getElementsByTagName("value").item(0).getTextContent().equals("PROFESSIONAL EXPERIENCE")) {
+                if (eElement.getElementsByTagName("value").item(0).getTextContent().equals("PROFESSIONAL EXPERIENCE"))
                     return getData(eElement);
-                }
             }
         }
         return null;
@@ -282,19 +281,20 @@ public class XmlParser implements Parser {
     private String retrieveContent(Element eElement) {
         if (eElement.getElementsByTagName("content").item(0) != null)
             return eElement.getElementsByTagName("content").item(0).getTextContent();
-        else return null;
+        else
+            return null;
     }
 
     private ArrayList<Node> getChildren(Element eElement) {
         ArrayList<Node> children = new ArrayList<>();
         if (eElement.hasChildNodes()) {
             NodeList nList = eElement.getElementsByTagName("node");
-            for (int temp = 1; temp < nList.getLength(); temp++) {
+            for (int temp = 0; temp < nList.getLength(); temp++) {
                 org.w3c.dom.Node nNode = nList.item(temp);
                 if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                     Element elem = (Element) nNode;
                     Node node = new ExpandableNode(elem.getAttribute("key"), elem.getElementsByTagName("value").item(0).getTextContent());
-
+                    System.out.println("edw " + elem.getAttribute("key"));
                     Element element = (Element) elem.getElementsByTagName("children").item(0);
                     if (element != null)
                         ((ExpandableNode) node).addChildren(getChildren(element));
@@ -310,6 +310,7 @@ public class XmlParser implements Parser {
         Node node = new ExpandableNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
         node.setKeyVisibility(Boolean.parseBoolean(eElement.getElementsByTagName("visible_key").item(0).getTextContent()));
         node.setLabelDrawableId(Integer.parseInt(eElement.getElementsByTagName("drawable_id").item(0).getTextContent()));
+        System.out.println(eElement.getAttribute("key"));
         Element elem = (Element) eElement.getElementsByTagName("children").item(0);
         ((ExpandableNode) node).addChildren(getChildren(elem));
         return node;

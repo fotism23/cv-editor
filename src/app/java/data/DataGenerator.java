@@ -3,6 +3,7 @@ package app.java.data;
 import app.java.utils.ApplicationUtils;
 import app.java.utils.exporters.Exporter;
 import app.java.utils.exporters.LatexExporter;
+import app.java.utils.exporters.TextExporter;
 import app.java.utils.exporters.XmlExporter;
 import app.java.utils.parsers.Parser;
 import app.java.utils.parsers.XmlParser;
@@ -39,17 +40,19 @@ public class DataGenerator {
             exportXml(path);
         } else if (exportType == ApplicationUtils.LATEX_TYPE_ID) {
             exportLatex(path);
+        } else if (exportType == ApplicationUtils.TEXT_TYPE_ID){
+            exportText(path);
         } else
             throw new UnsupportedDataTypeException(exportType + " data type is not supported.");
     }
 
-    public void generateData(Parser parser) {
+    private void generateData(Parser parser) {
         retrieveTemplate(parser);
         generatePersonalInfoNode(parser);
         generateAdditionalData(parser);
     }
 
-    public void retrieveTemplate(Parser parser) {
+    private void retrieveTemplate(Parser parser) {
         template = parser.parseTemplate();
     }
 
@@ -128,6 +131,17 @@ public class DataGenerator {
         return null;
     }
 
+    private void exportText(String exportTarget) {
+        if (template == ApplicationUtils.FUNCTIONAL_TEMPLATE_ID)
+            exportFunctional(new TextExporter(exportTarget));
+        else if (template == ApplicationUtils.CHRONOLOGICAL_TEMPLATE_ID)
+            exportChronological(new TextExporter(exportTarget));
+        else if (template == ApplicationUtils.COMBINED_TEMPLATE_ID)
+            exportCombined(new TextExporter(exportTarget));
+        else
+            throw new UnsupportedOperationException("Invalid template ID.");
+    }
+
     private void exportLatex(String exportTarget) {
         if (template == ApplicationUtils.FUNCTIONAL_TEMPLATE_ID)
             exportFunctional(new LatexExporter(exportTarget));
@@ -155,26 +169,26 @@ public class DataGenerator {
     private void exportChronological(Exporter exporter) {
         exporter.exportImage(profImage);
         exporter.exportPersonalInfo(personalInfo);
-        exporter.exportProfessionalProfile(null);
-        exporter.exportCoreStrengths(null);
-        exporter.exportProfessionalExperience(null);
-        exporter.exportEducationAndTraining(null);
-        exporter.exportFurtherCourses(null);
-        exporter.exportAdditionalInfo(null);
-        exporter.exportInterests(null);
+        exporter.exportProfessionalProfile(getNodeWithValue(ApplicationUtils.PROFESSIONAL_PROFILE_VALUE));
+        exporter.exportCoreStrengths(getNodeWithValue(ApplicationUtils.CORE_STRENGTHS_VALUE));
+        exporter.exportProfessionalExperience(getNodeWithValue(ApplicationUtils.PROFESSIONAL_EXPERIENCE_VALUE));
+        exporter.exportEducationAndTraining(getNodeWithValue(ApplicationUtils.EDUCATION_AND_TRAINING_VALUE));
+        exporter.exportFurtherCourses(getNodeWithValue(ApplicationUtils.FURTHER_COURSES_VALUE));
+        exporter.exportAdditionalInfo(getNodeWithValue(ApplicationUtils.ADDITIONAL_INFORMATION));
+        exporter.exportInterests(getNodeWithValue(ApplicationUtils.INTERESTS_VALUE));
         exporter.commit();
     }
 
     private void exportCombined(Exporter exporter) {
         exporter.exportImage(profImage);
         exporter.exportPersonalInfo(personalInfo);
-        exporter.exportProfessionalProfile(null);
-        exporter.exportSkillsAndExperience(null);
-        exporter.exportProfessionalExperience(null);
-        exporter.exportEducationAndTraining(null);
-        exporter.exportFurtherCourses(null);
-        exporter.exportAdditionalInfo(null);
-        exporter.exportInterests(null);
+        exporter.exportProfessionalProfile(getNodeWithValue(ApplicationUtils.PROFESSIONAL_PROFILE_VALUE));
+        exporter.exportSkillsAndExperience(getNodeWithValue(ApplicationUtils.SKILLS_AND_EXPERIENCE_VALUE));
+        exporter.exportProfessionalExperience(getNodeWithValue(ApplicationUtils.PROFESSIONAL_EXPERIENCE_VALUE));
+        exporter.exportEducationAndTraining(getNodeWithValue(ApplicationUtils.EDUCATION_AND_TRAINING_VALUE));
+        exporter.exportFurtherCourses(getNodeWithValue(ApplicationUtils.FURTHER_COURSES_VALUE));
+        exporter.exportAdditionalInfo(getNodeWithValue(ApplicationUtils.ADDITIONAL_INFORMATION));
+        exporter.exportInterests(getNodeWithValue(ApplicationUtils.INTERESTS_VALUE));
         exporter.commit();
     }
 

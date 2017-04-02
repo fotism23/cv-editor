@@ -20,6 +20,10 @@
     -fx-background-color: #49535b;
 }
 
+.menu .arrow {
+    -fx-background-color: #ffffff;
+}
+
 .menu .label{
     -fx-text-fill: #fffcff;
 }

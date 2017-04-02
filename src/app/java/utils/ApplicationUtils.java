@@ -55,6 +55,7 @@ public final class ApplicationUtils {
 
     public static final int XML_TYPE_ID = 0;
     public static final int LATEX_TYPE_ID = 1;
+    public static final int TEXT_TYPE_ID = 2;
 
     public static final String PERSONAL_INFO_NAME = "name";
     public static final String PERSONAL_INFO_ADDRESS = "address";
@@ -70,6 +71,8 @@ public final class ApplicationUtils {
     public static final String FURTHER_COURSES_VALUE = "FURTHER COURSES";
     public static final String ADDITIONAL_INFORMATION = "ADDITIONAL INFORMATION";
     public static final String INTERESTS_VALUE = "INTERESTS";
+    public static final String CORE_STRENGTHS_VALUE = "CORE STRENGTHS";
+    public static final String PROFESSIONAL_EXPERIENCE_VALUE = "PROFESSIONAL_EXPERIENCE";
 
 
     public static String encodeImageToBase64(Image image) throws IOException {

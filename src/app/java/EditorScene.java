@@ -20,7 +20,6 @@ import java.util.Optional;
 
 public class EditorScene {
     private Stage mStage;
-    private boolean openFile;
     private File file;
     private boolean canEdit;
     private Scene mScene;
@@ -216,10 +215,20 @@ public class EditorScene {
     }
 
     private void exportAction() {
-        try {
-            dataGenerator.exportData(file.getPath(), ApplicationUtils.LATEX_TYPE_ID);
-        } catch (UnsupportedDataTypeException e) {
-            e.printStackTrace();
+        File file = FileChooserUtils.exportAsFileChooser(mStage);
+        if (file == null) return;
+        if (file.getPath().endsWith(".txt")) {
+            try {
+                dataGenerator.exportData(file.getPath(), ApplicationUtils.TEXT_TYPE_ID);
+            } catch (UnsupportedDataTypeException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                dataGenerator.exportData(file.getPath(), ApplicationUtils.LATEX_TYPE_ID);
+            } catch (UnsupportedDataTypeException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -262,7 +262,6 @@ public class XmlExporter implements Exporter {
             Element subElem = document.createElement("visible_key");
             subElem.appendChild(document.createTextNode(Boolean.toString(nodes.get(temp).getKeyVisibility())));
             element.appendChild(subElem);
-            System.out.println(nodes.get(temp).getKeyVisibility());
 
             subElem = document.createElement("drawable_id");
             subElem.appendChild(document.createTextNode(Integer.toString(nodes.get(temp).getLabelDrawableId())));
