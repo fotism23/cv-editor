@@ -47,12 +47,6 @@ public class XmlParser implements Parser {
                 e.printStackTrace();
             }
         }
-        /*
-        if (imageElement.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-            Element eElement = (Element) imageElement;
-            System.out.println(eElement.getElementsByTagName("name").item(0).getTextContent());
-        }
-        */
         return null;
     }
 
@@ -68,8 +62,6 @@ public class XmlParser implements Parser {
         org.w3c.dom.Node infoElement = docElement.getElementsByTagName("node").item(0);
         if (infoElement.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
             Element eElement = (Element) infoElement;
-
-            //System.out.println("Root element :" + eElement.getElementsByTagName("name").item(0).getTextContent());
             return eElement.getElementsByTagName(ApplicationUtils.PERSONAL_INFO_NAME).item(0).getTextContent();
         }
         return null;

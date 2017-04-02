@@ -119,5 +119,12 @@ public class Node {
     public void setContent(String content) {
         this.content = content;
     }
-    
+
+    public String getContent() {
+        return content;
+    }
+
+    public Boolean getKeyVisibility() {
+        return isKeyVisible;
+    }
 }

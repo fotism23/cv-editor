@@ -3,13 +3,13 @@ package app.java.data;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ExpandableNode extends Node {
@@ -25,8 +25,11 @@ public class ExpandableNode extends Node {
     }
 
     public ObservableList<Node> getChildren() {
-        if (childrenData.size() == 0) return null;
-        else return childrenData;
+        return childrenData;
+    }
+
+    public ArrayList getChildrenArrayList() {
+        return new ArrayList<>(Arrays.asList(childrenData.toArray()));
     }
 
     public void addChild(Node item) {

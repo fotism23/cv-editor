@@ -121,6 +121,13 @@ public class DataGenerator {
             throw new UnsupportedOperationException("Invalid template ID.");
     }
 
+    private Node getNodeWithValue(String value) {
+        for (Node node : data) {
+            if (node.getValue().equals(value)) return node;
+        }
+        return null;
+    }
+
     private void exportLatex(String exportTarget) {
         if (template == ApplicationUtils.FUNCTIONAL_TEMPLATE_ID)
             exportFunctional(new LatexExporter(exportTarget));
@@ -135,13 +142,13 @@ public class DataGenerator {
     private void exportFunctional(Exporter exporter) {
         exporter.exportImage(profImage);
         exporter.exportPersonalInfo(personalInfo);
-        exporter.exportProfessionalProfile(null);
-        exporter.exportSkillsAndExperience(null);
-        exporter.exportCareerSummary(null);
-        exporter.exportEducationAndTraining(null);
-        exporter.exportFurtherCourses(null);
-        exporter.exportAdditionalInfo(null);
-        exporter.exportInterests(null);
+        exporter.exportProfessionalProfile(getNodeWithValue(ApplicationUtils.PROFESSIONAL_PROFILE_VALUE));
+        exporter.exportSkillsAndExperience(getNodeWithValue(ApplicationUtils.SKILLS_AND_EXPERIENCE_VALUE));
+        exporter.exportCareerSummary(getNodeWithValue(ApplicationUtils.CAREER_SUMMARY_VALUE));
+        exporter.exportEducationAndTraining(getNodeWithValue(ApplicationUtils.EDUCATION_AND_TRAINING_VALUE));
+        exporter.exportFurtherCourses(getNodeWithValue(ApplicationUtils.FURTHER_COURSES_VALUE));
+        exporter.exportAdditionalInfo(getNodeWithValue(ApplicationUtils.ADDITIONAL_INFORMATION));
+        exporter.exportInterests(getNodeWithValue(ApplicationUtils.INTERESTS_VALUE));
         exporter.commit();
     }
 

@@ -63,6 +63,15 @@ public final class ApplicationUtils {
     public static final String PERSONAL_INFO_EMAIL = "email";
     public static final String PERSONAL_INFO_WEBSITE = "website";
 
+    public static final String PROFESSIONAL_PROFILE_VALUE = "PROFESSIONAL PROFILE";
+    public static final String SKILLS_AND_EXPERIENCE_VALUE = "SKILLS AND EXPERIENCE";
+    public static final String CAREER_SUMMARY_VALUE = "CAREER SUMMARY";
+    public static final String EDUCATION_AND_TRAINING_VALUE = "EDUCATION AND TRAINING";
+    public static final String FURTHER_COURSES_VALUE = "FURTHER COURSES";
+    public static final String ADDITIONAL_INFORMATION = "ADDITIONAL INFORMATION";
+    public static final String INTERESTS_VALUE = "INTERESTS";
+
+
     public static String encodeImageToBase64(Image image) throws IOException {
         BufferedImage swingImage = SwingFXUtils.fromFXImage(image, null);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
