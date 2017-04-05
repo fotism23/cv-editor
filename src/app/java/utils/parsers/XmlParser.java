@@ -259,7 +259,6 @@ public class XmlParser implements Parser {
                 }
             }
         }
-
         return null;
     }
 
@@ -293,26 +292,26 @@ public class XmlParser implements Parser {
                 org.w3c.dom.Node nNode = nList.item(temp);
                 if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                     Element elem = (Element) nNode;
-                    Node node = new ExpandableNode(elem.getAttribute("key"), elem.getElementsByTagName("value").item(0).getTextContent());
-                    System.out.println("edw " + elem.getAttribute("key"));
-                    Element element = (Element) elem.getElementsByTagName("children").item(0);
-                    if (element != null)
-                        ((ExpandableNode) node).addChildren(getChildren(element));
-                    children.add(node);
+                    System.out.println("ELEMENT TO ADD : " + getData(elem).getKey());
+                    children.add(getData(elem));
                 }
             }
-            return children;
         }
-        return null;
+        return children;
     }
 
     private Node getData(Element eElement) {
         Node node = new ExpandableNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
         node.setKeyVisibility(Boolean.parseBoolean(eElement.getElementsByTagName("visible_key").item(0).getTextContent()));
         node.setLabelDrawableId(Integer.parseInt(eElement.getElementsByTagName("drawable_id").item(0).getTextContent()));
-        System.out.println(eElement.getAttribute("key"));
         Element elem = (Element) eElement.getElementsByTagName("children").item(0);
-        ((ExpandableNode) node).addChildren(getChildren(elem));
+        if (elem != null) {
+            for (Node n : getChildren(elem))
+                System.out.println("elem : " + n.getKey());
+            System.out.println();
+            ((ExpandableNode) node).addChildren(getChildren(elem));
+
+        }
         return node;
     }
 }

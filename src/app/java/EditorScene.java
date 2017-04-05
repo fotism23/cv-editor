@@ -1,6 +1,8 @@
 package app.java;
 
 import app.java.data.DataGenerator;
+import app.java.data.ExpandableNode;
+import app.java.data.Node;
 import app.java.utils.ApplicationUtils;
 import app.java.utils.FileChooserUtils;
 import javafx.fxml.FXML;
@@ -10,12 +12,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.activation.UnsupportedDataTypeException;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.security.InvalidKeyException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class EditorScene {
@@ -27,12 +34,21 @@ public class EditorScene {
     private boolean saved;
     private DataGenerator dataGenerator;
 
+    private ArrayList<Node> data;
+    private VBox dataList;
+    private int tabMultiplier = 1;
+    private ContextMenu contextMenu;
+    private String itemSelected;
+
     @FXML
     private TextField nameTextField, addressTextField, phoneTextField, mobileTextField, emailTextField, websiteTextField;
     @FXML
     private MenuBar menuBar;
     @FXML
     private ImageView avatarImageView;
+
+    //private FXMLLoader loader;
+    //Map<String, Object> namespace;
 
     public EditorScene(boolean template, File file) {
         if (template){
@@ -47,13 +63,21 @@ public class EditorScene {
 
     public Scene initialize(Stage stage) throws Exception {
         this.mStage = stage;
+
+        //loader = new FXMLLoader(getClass().getResource(ApplicationUtils.EDITOR_WINDOW_LAYOUT_FXML));
+        //Parent root = loader.load();
+        //namespace = loader.getNamespace();
+
         Parent root = FXMLLoader.load(getClass().getResource(ApplicationUtils.EDITOR_WINDOW_LAYOUT_FXML));
         mStage.setTitle(ApplicationUtils.APPLICATION_TITLE);
         mStage.setResizable(true);
-        mStage.setMinHeight(500);
-        mStage.setMinWidth(500);
+        mStage.setMinHeight(ApplicationUtils.EDITOR_WINDOW_HEIGHT);
+        mStage.setMinWidth(ApplicationUtils.EDITOR_WINDOW_WIDTH);
         mStage.setOnCloseRequest(event -> closeAction());
         mScene = new Scene(root, ApplicationUtils.EDITOR_WINDOW_WIDTH, ApplicationUtils.EDITOR_WINDOW_HEIGHT);
+
+
+
         this.canEdit = true;
         initializeTextFields();
         initializeMenuItems();
@@ -62,6 +86,16 @@ public class EditorScene {
         return mScene;
     }
 
+    /*
+    public void initialize() {
+        nameTextField = (TextField) namespace.get("name");
+        addressTextField = (TextField) namespace.get("address");
+        phoneTextField = (TextField) namespace.get("home");
+        mobileTextField = (TextField) namespace.get("mobile");
+        emailTextField = (TextField) namespace.get("email");
+        websiteTextField = (TextField) namespace.get("website");
+    }
+*/
     private void initializeTextFields() {
         nameTextField = (TextField) mScene.lookup("#name");
         addressTextField = (TextField) mScene.lookup("#address");
@@ -250,7 +284,8 @@ public class EditorScene {
     private void showData() {
         showPersonalInfo();
         showProfImage();
-        createCustomListView();
+        createEditorFields();
+        //createCustomListView();
     }
 
     private void showProfImage() {
@@ -278,38 +313,124 @@ public class EditorScene {
         }
     }
 
-    private void createCustomListView() {
-        
+    private void createEditorFields() {
+        AnchorPane anchorPane = (AnchorPane) mScene.lookup("#anchor_pane");
+
+        data = dataGenerator.getData();
+        dataList = new VBox();
+        dataList.setLayoutY(300);
+        dataList.setLayoutX(50);
+        dataList.setMinWidth(500);
+        dataList.setSpacing(8);
+
+        for (Node node : data)
+            dataList.getChildren().add(getCell(node, false));
+
+        anchorPane.getChildren().add(dataList);
     }
 
-    /*
-    private void createCustomListView() {
-        ObservableList<Node> data = FXCollections.observableArrayList();
-        data.addAll(new Node("Occupation", true), new Node("Experience", true));
+    private void addItem() {
+        System.out.println(itemSelected);
+        dataGenerator.addElement(itemSelected);
+        refreshList();
+    }
 
-        final ListView<Node> listView = new ListView<Node>(data);
-        listView.setCellFactory(new Callback<ListView<Node>, ListCell<Node>>() {
-            @Override
-            public ListCell<Node> call(ListView<Node> param) {
-                return new ListCell<Node>() {
-                    @Override
-                    protected void updateItem(Node item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item != null) {
-                            VBox vBox = new VBox(new Text(item.getKey()));
-                            HBox hBox = new HBox(new Label("adsfga"));
-                        }
-                    }
-                };
+    private void removeItem() {
+        dataGenerator.removeElement(itemSelected);
+        refreshList();
+    }
+
+    private void refreshList() {
+        for (int i = 0; i < dataList.getChildren().size(); i++) {
+            dataList.getChildren().remove(dataList.getChildren().get(i));
+        }
+        data = dataGenerator.getData();
+        for (Node node : data)
+            dataList.getChildren().add(getCell(node, false));
+
+    }
+
+    private void initializeCellContextMenu() {
+        this.contextMenu = new ContextMenu();
+        MenuItem addMenuItem = new MenuItem("Add");
+        addMenuItem.setOnAction(event -> addItem());
+        MenuItem removeMenuItem = new MenuItem("Remove");
+        removeMenuItem.setOnAction(event -> removeItem());
+
+        this.contextMenu.getItems().addAll(addMenuItem, removeMenuItem);
+    }
+
+    private VBox getCell(Node node, boolean isHeaderEditable) {
+        initializeCellContextMenu();
+        VBox cell = new VBox();
+        HBox header;
+
+        if (!isHeaderEditable)
+            header = getHeader(node);
+        else
+            header = getEditableHeader(node);
+
+        setContextMenuListener(header, node);
+        cell.getChildren().add(header);
+        cell.getChildren().add(getContent(node));
+        cell.setSpacing(4);
+        return cell;
+    }
+
+    private void setContextMenuListener(HBox header, Node node) {
+        header.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
+            contextMenu.hide();
+            if (event.getButton().equals(MouseButton.SECONDARY)) {
+                contextMenu.show(mStage, event.getScreenX(), event.getScreenY());
+                itemSelected = node.getKey();
             }
         });
-        AnchorPane anchorPane = (AnchorPane) m_scene.lookup("#anchor_pane");
-        listView.setLayoutX(50);
-        listView.setLayoutY(300);
-        listView.setMinWidth(400);
-        anchorPane.getChildren().add(listView);
     }
-    */
 
+    private HBox getContent(Node node) {
+        HBox contentHBox = new HBox();
+        contentHBox.getChildren().add(new Label("\t"));
 
+        if (getAdditionalData(node) != null)
+            contentHBox.getChildren().add(getAdditionalData(node));
+        return contentHBox;
+    }
+
+    private HBox getHeader(Node node) {
+        HBox headerHBox = new HBox(new Label(node.getKey()), new Label(node.getValue()));
+        headerHBox.setSpacing(10);
+        headerHBox.setLayoutX(ApplicationUtils.TAB_SIZE * tabMultiplier);
+        return headerHBox;
+    }
+
+    private HBox getEditableHeader(Node node) {
+        HBox headerHBox = new HBox(new Label(node.getKey()), new TextField(node.getValue()));
+        headerHBox.setSpacing(10);
+        headerHBox.setLayoutX(ApplicationUtils.TAB_SIZE * tabMultiplier);
+        return headerHBox;
+    }
+
+    private VBox getAdditionalData(Node parentNode) {
+        if (parentNode instanceof ExpandableNode)
+            return getNodeChildren((ExpandableNode) parentNode);
+        else
+            return getNodeContent(parentNode);
+    }
+
+    private VBox getNodeChildren(ExpandableNode parentNode) {
+        VBox vBox = new VBox();
+        ArrayList<Node> data = parentNode.getChildrenArrayList();
+        tabMultiplier++;
+        for (Node node : data) {
+            vBox.getChildren().add(getCell(node, true));
+        }
+        tabMultiplier--;
+        return vBox;
+    }
+
+    private VBox getNodeContent(Node parentNode) {
+        TextArea textArea = new TextArea(parentNode.getContent());
+        textArea.setPrefHeight(50);
+        return new VBox(textArea);
+    }
 }

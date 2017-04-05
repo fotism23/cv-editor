@@ -69,35 +69,4 @@ public class ExpandableNode extends Node {
         }
         throw new NoSuchElementException("Child Node with key : '" + key + "' not found.");
     }
-
-    @Override
-    public ListCell<Node> getListCell() {
-        return super.getListCell();
-    }
-
-    public ListView<Node> toListView() {
-        if (childrenData.size() <=  0) return null;
-        //ObservableList<Node> data = FXCollections.observableArrayList();
-        //data.addAll(children);
-
-        listView = new ListView<>(childrenData);
-        listView.setCellFactory(param -> new ListCell<Node>(){
-            @Override
-            protected void updateItem(Node item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item != null) {
-                    HBox hBox;
-                    try {
-                        hBox = new HBox(getKeyLabel(), getValueTextField());
-                        setGraphic(hBox);
-                        VBox vBox = new VBox(hBox, new ListView<Node>());
-                        hBox.setSpacing(10);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        return listView;
-    }
 }

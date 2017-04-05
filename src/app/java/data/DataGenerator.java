@@ -7,8 +7,6 @@ import app.java.utils.exporters.TextExporter;
 import app.java.utils.exporters.XmlExporter;
 import app.java.utils.parsers.Parser;
 import app.java.utils.parsers.XmlParser;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 
 import javax.activation.UnsupportedDataTypeException;
@@ -192,17 +190,21 @@ public class DataGenerator {
         exporter.commit();
     }
 
-     private ObservableList<Node> getDataAsObservableList() {
-        ObservableList<Node> list = FXCollections.observableArrayList();
-        list.addAll(data);
-        return list;
-    }
-
     public void setProfImage(Image profImage) {
         this.profImage = profImage;
     }
 
     public Image getProfImage() {
         return profImage;
+    }
+
+    public ArrayList<Node> getData() {
+        return data;
+    }
+
+    public void addElement(String itemSelected) {
+    }
+
+    public void removeElement(String itemSelected) {
     }
 }

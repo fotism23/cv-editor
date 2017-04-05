@@ -98,24 +98,6 @@ public class Node {
         valueTextField.setText(value);
     }
 
-    public ListCell<Node> getListCell() {
-        return new ListCell<Node>() {
-            @Override
-            protected void updateItem(Node item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item != null) {
-                    HBox hBox;
-                    try {
-                        hBox = new HBox(getKeyLabel(), getValueTextField());
-                        setGraphic(hBox);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
-    }
-
     public void setContent(String content) {
         this.content = content;
     }

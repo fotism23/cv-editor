@@ -34,26 +34,25 @@ public abstract class FileChooserUtils {
     private static void initializeOpenImageFileChooser(FileChooser fileChooser) {
         fileChooser.setTitle("Select Image");
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("JPEG", "*.jpeg"));
+                new FileChooser.ExtensionFilter("JPG", "*.jpg"));
     }
 
     private static void initializeSelectFileChooser(final FileChooser fileChooser) {
         fileChooser.setTitle("Select File");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("CV files", ApplicationUtils.APPLICATION_FILE_EXTENSION),
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
+                new FileChooser.ExtensionFilter("CV files", "*" + ApplicationUtils.APPLICATION_FILE_EXTENSION));
     }
 
     private static void initializeSaveFileChooser(final FileChooser fileChooser) {
         fileChooser.setTitle("Save As");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("CV files", ApplicationUtils.APPLICATION_FILE_EXTENSION));
+                new FileChooser.ExtensionFilter("CV files", "*" + ApplicationUtils.APPLICATION_FILE_EXTENSION));
     }
 
     private static void initializeExportFileChooser(final FileChooser fileChooser) {
         fileChooser.setTitle("Export As");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Latex file", ApplicationUtils.LATEX_FILE_EXTENSION),
-                new FileChooser.ExtensionFilter("Text File", ApplicationUtils.TEXT_FILE_EXTENSION));
+                new FileChooser.ExtensionFilter("Latex file", "*" + ApplicationUtils.LATEX_FILE_EXTENSION),
+                new FileChooser.ExtensionFilter("Text File", "*" + ApplicationUtils.TEXT_FILE_EXTENSION));
     }
 }

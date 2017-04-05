@@ -74,6 +74,10 @@ public final class ApplicationUtils {
     public static final String CORE_STRENGTHS_VALUE = "CORE STRENGTHS";
     public static final String PROFESSIONAL_EXPERIENCE_VALUE = "PROFESSIONAL_EXPERIENCE";
 
+    public static final int TAB_SIZE = 20;
+    public static final int LINE_SIZE = 50;
+    public static final int EDITOR_X_OFFSET = 20;
+    public static final int EDITOR_Y_OFFSET = 300;
 
     public static String encodeImageToBase64(Image image) throws IOException {
         BufferedImage swingImage = SwingFXUtils.fromFXImage(image, null);

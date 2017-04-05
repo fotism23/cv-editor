@@ -37,10 +37,6 @@
     -fx-text-fill: #ffffff;
 }
 
-.separator{
-    -fx-background-color: #49535b;
-}
-
 .menu-bar .menu-item:hover {
     -fx-background-color: #0096c9;
 }
@@ -63,6 +59,26 @@
 {
     -fx-mark-color: #ffffff ;
 }
+
+.list-view {
+    -fx-background-color: #737d85
+}
+
+.list-view .list-cell {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #737d85
+}
+
+.list-view .list-cell .label {
+    -fx-text-fill: #ffffff;
+}
+
+.label {
+    -fx-text-fill: #ffffff;
+}
+
+
+
 
 
 
