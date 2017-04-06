@@ -397,7 +397,8 @@ public class EditorScene {
     }
 
     private HBox getHeader(Node node) {
-        HBox headerHBox = new HBox(new Label(node.getKey()), new Label(node.getValue()));
+        HBox headerHBox = new HBox(node.getKeyLabel(), new Label(node.getValue()));
+        //HBox headerHBox = new HBox(new Label(node.getKey()), new Label(node.getValue()));
         headerHBox.setSpacing(10);
         headerHBox.setLayoutX(ApplicationUtils.TAB_SIZE * tabMultiplier);
         return headerHBox;

@@ -11,5 +11,7 @@
     <orderEntry type="library" name="controlsfx-8.40.12" level="project" />
     <orderEntry type="library" name="controlsfx-8.20.9" level="project" />
     <orderEntry type="library" name="openjfx-dialogs-1.0.3" level="project" />
+    <orderEntry type="library" name="Arquillian JUnit:Release" level="project" />
+    <orderEntry type="library" name="jlr" level="project" />
   </component>
 </module>

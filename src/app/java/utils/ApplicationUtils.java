@@ -79,6 +79,9 @@ public final class ApplicationUtils {
     public static final int EDITOR_X_OFFSET = 20;
     public static final int EDITOR_Y_OFFSET = 300;
 
+    public static final String TEX_TEMPLATE_PATH = "src/app/res/templates/template.tex";
+    public static final String TEMPLATE_DIRECTORY_PATH = "src/app/res/templates/";
+
     public static String encodeImageToBase64(Image image) throws IOException {
         BufferedImage swingImage = SwingFXUtils.fromFXImage(image, null);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

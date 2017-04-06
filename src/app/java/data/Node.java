@@ -33,11 +33,16 @@ public class Node {
         this.drawableId = UNINITIALIZED;
     }
 
-    public javafx.scene.Node getKeyLabel() throws Exception {
+    public javafx.scene.Node getKeyLabel() {
         if (isKeyVisible)
             return getTextLabel();
         else
-            return getDotLabel();
+            try {
+                return getDotLabel();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return getTextLabel();
+            }
     }
 
     private Label getTextLabel() {
