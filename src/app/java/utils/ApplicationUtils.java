@@ -45,10 +45,6 @@ public final class ApplicationUtils {
 
     public static final String APPLICATION_FILE_EXTENSION = ".cv";
 
-    public static final int BLACK_DOT_DRAWABLE = 0;
-    public static final int WHITE_DOT_DRAWABLE = 1;
-    public static final int STRING_KEY = -1;
-
     public static final int FUNCTIONAL_TEMPLATE_ID = 0;
     public static final int CHRONOLOGICAL_TEMPLATE_ID = 1;
     public static final int COMBINED_TEMPLATE_ID = 2;
@@ -75,9 +71,6 @@ public final class ApplicationUtils {
     public static final String PROFESSIONAL_EXPERIENCE_VALUE = "PROFESSIONAL_EXPERIENCE";
 
     public static final int TAB_SIZE = 20;
-    public static final int LINE_SIZE = 50;
-    public static final int EDITOR_X_OFFSET = 20;
-    public static final int EDITOR_Y_OFFSET = 300;
 
     public static final String TEX_TEMPLATE_PATH = "src/app/res/templates/template.tex";
     public static final String TEMPLATE_DIRECTORY_PATH = "src/app/res/templates/";
@@ -124,7 +117,7 @@ public final class ApplicationUtils {
         alert.setHeight(200);
         alert.setGraphic(imageView);
 
-        alert.setContentText("Created By\nFotios Mitropoulos");
+        alert.setContentText("Created By\nFotios Mitropoulos\nAntreas Athanasiadis");
         DialogPane pane = alert.getDialogPane();
         pane.getStylesheets().add(InitScene.class.getResource("../res/styles/dialog_style.css").toExternalForm());
         pane.getStyleClass().add("myDialog");

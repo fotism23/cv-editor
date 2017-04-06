@@ -1,6 +1,7 @@
 package app.java.data;
 
 
+import app.java.EditorScene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -50,8 +51,8 @@ public class Node {
     }
 
     private ImageView getDotLabel() throws Exception {
-        if (drawableId == UNINITIALIZED)
-            throw new Exception("Drawable not initialized.");
+        if (drawableId == UNINITIALIZED) return generateDot();
+            //throw new Exception("Drawable not initialized.");
         else
             return generateDot();
     }
@@ -64,13 +65,17 @@ public class Node {
     }
 
     private ImageView blackDotImageView() {
-        Image image = new Image(BLACK_DOT_PATH);
-        return new ImageView(image);
+        ImageView imageView = new ImageView(EditorScene.class.getResource(BLACK_DOT_PATH).toString());
+        imageView.setFitHeight(15);
+        imageView.setFitWidth(15);
+        return imageView;
     }
 
     private ImageView whiteDotImageView() {
-        Image image = new Image(WHITE_DOT_PATH);
-        return new ImageView(image);
+        ImageView imageView = new ImageView(EditorScene.class.getResource(WHITE_DOT_PATH).toString());
+        imageView.setFitHeight(15);
+        imageView.setFitWidth(15);
+        return imageView;
     }
 
     public String getKey() {

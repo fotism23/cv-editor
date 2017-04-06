@@ -7,6 +7,8 @@ import app.java.utils.ApplicationUtils;
 import app.java.utils.FileChooserUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -16,6 +18,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.activation.UnsupportedDataTypeException;
@@ -23,6 +26,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 
 public class EditorScene {
@@ -47,10 +51,10 @@ public class EditorScene {
     @FXML
     private ImageView avatarImageView;
 
-    //private FXMLLoader loader;
-    //Map<String, Object> namespace;
+    private FXMLLoader loader;
+    private Map<String, Object> namespace;
 
-    public EditorScene(boolean template, File file) {
+    EditorScene(boolean template, File file) {
         if (template){
             this.hasSavePath = false;
             this.saved = true;
@@ -61,14 +65,13 @@ public class EditorScene {
         }
     }
 
-    public Scene initialize(Stage stage) throws Exception {
+    Scene initialize(Stage stage) throws Exception {
         this.mStage = stage;
 
-        //loader = new FXMLLoader(getClass().getResource(ApplicationUtils.EDITOR_WINDOW_LAYOUT_FXML));
-        //Parent root = loader.load();
-        //namespace = loader.getNamespace();
+        loader = new FXMLLoader(getClass().getResource(ApplicationUtils.EDITOR_WINDOW_LAYOUT_FXML));
+        Parent root = loader.load();
+        namespace = loader.getNamespace();
 
-        Parent root = FXMLLoader.load(getClass().getResource(ApplicationUtils.EDITOR_WINDOW_LAYOUT_FXML));
         mStage.setTitle(ApplicationUtils.APPLICATION_TITLE);
         mStage.setResizable(true);
         mStage.setMinHeight(ApplicationUtils.EDITOR_WINDOW_HEIGHT);
@@ -76,38 +79,26 @@ public class EditorScene {
         mStage.setOnCloseRequest(event -> closeAction());
         mScene = new Scene(root, ApplicationUtils.EDITOR_WINDOW_WIDTH, ApplicationUtils.EDITOR_WINDOW_HEIGHT);
 
-
-
         this.canEdit = true;
-        initializeTextFields();
+        initialize();
         initializeMenuItems();
         initializeImageView();
         openFile();
         return mScene;
     }
 
-    /*
-    public void initialize() {
+    private void initialize() {
         nameTextField = (TextField) namespace.get("name");
         addressTextField = (TextField) namespace.get("address");
         phoneTextField = (TextField) namespace.get("home");
         mobileTextField = (TextField) namespace.get("mobile");
         emailTextField = (TextField) namespace.get("email");
         websiteTextField = (TextField) namespace.get("website");
-    }
-*/
-    private void initializeTextFields() {
-        nameTextField = (TextField) mScene.lookup("#name");
-        addressTextField = (TextField) mScene.lookup("#address");
-        phoneTextField = (TextField) mScene.lookup("#home");
-        mobileTextField = (TextField) mScene.lookup("#mobile");
-        emailTextField = (TextField) mScene.lookup("#email");
-        websiteTextField = (TextField) mScene.lookup("#website");
         toggleEdit();
     }
 
     private void initializeMenuItems() {
-        menuBar = (MenuBar) mScene.lookup("#edit");
+        menuBar = (MenuBar) namespace.get("editMenu");
         initializeFileMenu();
         initializeEditMenu();
         initializeViewMenu();
@@ -115,7 +106,7 @@ public class EditorScene {
     }
 
     private void initializeImageView() {
-        avatarImageView = (ImageView) mScene.lookup("#imageView");
+        avatarImageView = (ImageView) namespace.get("imageView");
         avatarImageView.maxHeight(169);
         avatarImageView.maxHeight(169);
         avatarImageView.setOnMouseClicked(event -> {
@@ -285,7 +276,6 @@ public class EditorScene {
         showPersonalInfo();
         showProfImage();
         createEditorFields();
-        //createCustomListView();
     }
 
     private void showProfImage() {
@@ -314,7 +304,9 @@ public class EditorScene {
     }
 
     private void createEditorFields() {
-        AnchorPane anchorPane = (AnchorPane) mScene.lookup("#anchor_pane");
+        AnchorPane anchorPane = (AnchorPane) namespace.get("anchorPane");
+        anchorPane.setFocusTraversable(false);
+        anchorPane.setPadding(new Insets(0,0,30,0));
 
         data = dataGenerator.getData();
         dataList = new VBox();
@@ -368,13 +360,48 @@ public class EditorScene {
         if (!isHeaderEditable)
             header = getHeader(node);
         else
-            header = getEditableHeader(node);
+            header = getHeader(node);
 
+        setEditListener(header, node);
         setContextMenuListener(header, node);
         cell.getChildren().add(header);
         cell.getChildren().add(getContent(node));
         cell.setSpacing(4);
         return cell;
+    }
+
+    private void setEditListener(HBox header, Node node) {
+        header.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_CLICKED, event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                //contextMenu.show(mStage, event.getScreenX(), event.getScreenY());
+                itemSelected = node.getKey();
+                showPopup(itemSelected);
+            }
+        });
+    }
+
+    private void showPopup(String itemSelected) {
+        Stage stage = new Stage();
+        stage.setTitle("Insert Info");
+        VBox vBox = new VBox();
+        vBox.setSpacing(20);
+        vBox.setPadding(new Insets(5, 5, 5, 5));
+        vBox.setAlignment(Pos.CENTER);
+        vBox.getChildren().addAll(new TextArea(), new DatePicker());
+        stage.setScene(new Scene(vBox, 100, 100));
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(mStage);
+        stage.show();
+        Button addButton = new Button("Add");
+        addButton.setOnMouseClicked(event -> {
+            // todo save fields.
+            //Node node = dataGenerator.queryNode(itemSelected);
+            stage.close();
+        });
+        vBox.getChildren().add(addButton);
+        stage.setHeight(300);
+        stage.setWidth(300);
+        stage.setResizable(false);
     }
 
     private void setContextMenuListener(HBox header, Node node) {

@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javax.activation.UnsupportedDataTypeException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class DataGenerator {
@@ -207,5 +208,22 @@ public class DataGenerator {
     }
 
     public void removeElement(String itemSelected) {
+        queryNode(itemSelected);
+    }
+
+    public Node queryNode(String itemSelected) {
+        String[] parts = itemSelected.split("\\.");
+        //System.out.println(Arrays.toString(parts));
+        Node node = data.get(Integer.parseInt(parts[0]) - 2);
+        System.out.println(node.getKey());
+        for (int i = 1; i < parts.length; i++) {
+            try {
+                node = ((ExpandableNode) node).getChild(Integer.parseInt(parts[i]));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println(node.getKey());
+        return null;
     }
 }
