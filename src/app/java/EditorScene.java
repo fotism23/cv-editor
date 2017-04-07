@@ -465,7 +465,6 @@ public class EditorScene {
         vBox.getChildren().add(editButton);
 
         editButton.setOnMouseClicked(event -> {
-            // todo save fields.
             node.setValue(textContent.getText());
             stage.close();
             refreshList();
