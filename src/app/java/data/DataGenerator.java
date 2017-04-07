@@ -12,7 +12,6 @@ import javafx.scene.image.Image;
 import javax.activation.UnsupportedDataTypeException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class DataGenerator {
@@ -204,26 +203,36 @@ public class DataGenerator {
     }
 
     public void addElement(String itemSelected) {
-
+        if (itemSelected.length() <= 2) return;
+        String parentKey = itemSelected.substring(0, itemSelected.length() - 2);
+        Node parentNode = queryNode(parentKey);
+        ExpandableNode node = NodeFactory.createNewExpandableNode("","");
+        ((ExpandableNode) parentNode).addChild(node);
     }
 
-    public void removeElement(String itemSelected) {
-        queryNode(itemSelected);
+    public boolean removeElement(String itemSelected) {
+        if (itemSelected.length() <= 2) return false;
+        String parentKey = itemSelected.substring(0, itemSelected.length() - 2);
+        Node parentNode = queryNode(parentKey);
+        return ((ExpandableNode) parentNode).removeChild(itemSelected);
     }
 
     public Node queryNode(String itemSelected) {
         String[] parts = itemSelected.split("\\.");
-        //System.out.println(Arrays.toString(parts));
         Node node = data.get(Integer.parseInt(parts[0]) - 2);
         System.out.println(node.getKey());
-        for (int i = 1; i < parts.length; i++) {
-            try {
-                node = ((ExpandableNode) node).getChild(Integer.parseInt(parts[i]));
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (node.getKey().equals(itemSelected))
+            return node;
+        int keyIndex = 0;
+        String tempKey = parts[keyIndex];
+        while (true) {
+            if (((ExpandableNode) node).getChild(itemSelected) == null) {
+                keyIndex++;
+                tempKey += "." + parts[keyIndex];
+                node = ((ExpandableNode) node).getChild(tempKey);
+            } else {
+                return ((ExpandableNode) node).getChild(itemSelected);
             }
         }
-        System.out.println(node.getKey());
-        return null;
     }
 }

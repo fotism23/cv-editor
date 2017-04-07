@@ -1,21 +1,14 @@
 package app.java.data;
 
-
 import app.java.EditorScene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
 import static app.java.utils.ApplicationUtils.*;
 
 public class Node {
     public String TAG = this.getClass().getName();
-
 
     public static final int BLACK_DOT_DRAWABLE_ID = 0;
     public static final int WHITE_DOT_DRAWABLE_ID = 1;
@@ -51,8 +44,8 @@ public class Node {
     }
 
     private ImageView getDotLabel() throws Exception {
-        if (drawableId == UNINITIALIZED) return generateDot();
-            //throw new Exception("Drawable not initialized.");
+        if (drawableId == UNINITIALIZED)
+            throw new Exception("Drawable not initialized.");
         else
             return generateDot();
     }

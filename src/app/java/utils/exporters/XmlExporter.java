@@ -251,7 +251,7 @@ public class XmlExporter implements Exporter {
     }
 
     private Element getChildren(ExpandableNode node) {
-        ArrayList<Node> nodes = node.getChildrenArrayList();
+        ArrayList<Node> nodes = node.getChildren();
         Element elem = document.createElement("children");
         if (nodes.size() <= 0) return elem;
 

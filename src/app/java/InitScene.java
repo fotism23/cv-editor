@@ -7,21 +7,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.Optional;
 
-
 public class InitScene {
     @FXML
     private Button createNewButton, openButton, compareButton, aboutButton;
 
-
     private Stage mStage;
     private Scene mScene;
-
     private EditorScene editorScene;
 
     public Scene initialize(Stage stage) throws Exception{
@@ -58,12 +54,17 @@ public class InitScene {
         Optional<String> result = ApplicationUtils.showTemplateOptionDialog();
 
         if (result.isPresent()) {
-            if (result.get().equals("Functional CV"))
-                launchEditorWithTemplate(new File(ApplicationUtils.FUNCTIONAL_TEMPLATE_PATH));
-            else if (result.get().equals("Combined CV"))
-                launchEditorWithTemplate(new File(ApplicationUtils.COMBINED_TEMPLATE_PATH));
-            else
-                launchEditorWithTemplate(new File(ApplicationUtils.CHRONOLOGICAL_TEMPLATE_PATH));
+            switch (result.get()) {
+                case "Functional CV":
+                    launchEditorWithTemplate(new File(ApplicationUtils.FUNCTIONAL_TEMPLATE_PATH));
+                    break;
+                case "Combined CV":
+                    launchEditorWithTemplate(new File(ApplicationUtils.COMBINED_TEMPLATE_PATH));
+                    break;
+                default:
+                    launchEditorWithTemplate(new File(ApplicationUtils.CHRONOLOGICAL_TEMPLATE_PATH));
+                    break;
+            }
         }
     }
 

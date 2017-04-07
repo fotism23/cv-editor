@@ -137,7 +137,7 @@ public class TextExporter implements Exporter{
     }
 
     private void appendChildren(ExpandableNode node) {
-        ArrayList<Node> nodes = node.getChildrenArrayList();
+        ArrayList<Node> nodes = node.getChildren();
         if (nodes.size() <= 0) return;
         tabs ++;
         for (Node childNode : nodes) {
