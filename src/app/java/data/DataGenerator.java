@@ -203,9 +203,8 @@ public class DataGenerator {
     }
 
     public void addElement(String itemSelected) {
-        if (itemSelected.length() <= 2) return;
-        String parentKey = itemSelected.substring(0, itemSelected.length() - 2);
-        Node parentNode = queryNode(parentKey);
+        //String parentKey = itemSelected.substring(0, itemSelected.length() - 2);
+        Node parentNode = queryNode(itemSelected);
         ExpandableNode node = NodeFactory.createNewExpandableNode("","");
         ((ExpandableNode) parentNode).addChild(node);
     }

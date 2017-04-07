@@ -3,6 +3,7 @@ package app.java;
 import app.java.data.DataGenerator;
 import app.java.data.ExpandableNode;
 import app.java.data.Node;
+import app.java.data.NodeFactory;
 import app.java.utils.ApplicationUtils;
 import app.java.utils.FileChooserUtils;
 import javafx.fxml.FXML;
@@ -319,7 +320,7 @@ public class EditorScene {
 
     private void addItem() {
         System.out.println(itemSelected);
-        dataGenerator.addElement(itemSelected);
+        showAddPopup();
         refreshList();
     }
 
@@ -369,45 +370,111 @@ public class EditorScene {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
                 if (!canEdit)
                     return;
-                //contextMenu.show(mStage, event.getScreenX(), event.getScreenY());
                 itemSelected = node.getKey();
-                showPopup(itemSelected);
+                showEditPopup(itemSelected);
             }
         });
     }
 
-    private void showPopup(String itemSelected) {
-        Node node = dataGenerator.queryNode(itemSelected);
-
+    private Stage initializePopup(String title) {
         Stage stage = new Stage();
-        stage.setTitle("Insert Info");
+        stage.setTitle(title);
+
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(mStage);
+        stage.setHeight(300);
+        stage.setWidth(300);
+        stage.setResizable(false);
+        return stage;
+    }
+
+    private void showAddPopup() {
+        Stage stage = initializePopup("Insert Info");
+
         VBox vBox = new VBox();
         vBox.setSpacing(20);
         vBox.setPadding(new Insets(5, 5, 5, 5));
         vBox.setAlignment(Pos.CENTER);
 
-        TextArea textContent = new TextArea(node.getValue());
-        DatePicker datePicker = new DatePicker();
+        Node node = dataGenerator.queryNode(itemSelected);
 
-        vBox.getChildren().addAll(new Label(node.getKey()), textContent, new Label("Select Date"), datePicker);
+        TextField textField = new TextField("Key");
+        TextArea textContent = new TextArea("Value");
+        DatePicker datePicker = new DatePicker();
+        ToggleGroup drawableSelectionGroup = new ToggleGroup();
+
+        RadioButton stringDrawableRadioButton = new RadioButton("Text key");
+        stringDrawableRadioButton.setSelected(true);
+        stringDrawableRadioButton.setToggleGroup(drawableSelectionGroup);
+
+        RadioButton whiteDotDrawableRadioButton = new RadioButton("White dot");
+        whiteDotDrawableRadioButton.setToggleGroup(drawableSelectionGroup);
+
+        RadioButton blackDotDrawableRadioButton = new RadioButton("Black dot");
+        blackDotDrawableRadioButton.setToggleGroup(drawableSelectionGroup);
+
+        Button addButton = new Button("Add");
+
+        vBox.getChildren().addAll(textField, textContent, new Label("Select Date"), datePicker, new HBox(stringDrawableRadioButton, whiteDotDrawableRadioButton, blackDotDrawableRadioButton));
+        vBox.getChildren().add(addButton);
+
+        addButton.setOnMouseClicked(event -> {
+            ExpandableNode nodeToAdd = NodeFactory.createNewExpandableNode(textField.getText(), textContent.getText());
+            if (drawableSelectionGroup.getSelectedToggle() != null) {
+                switch (drawableSelectionGroup.getUserData().toString()) {
+                    case "Text key":
+                        nodeToAdd.setKeyVisibility(true);
+                        break;
+                    case "White dot":
+                        nodeToAdd.setKeyVisibility(false);
+                        nodeToAdd.setLabelDrawableId(Node.WHITE_DOT_DRAWABLE_ID);
+                        break;
+                    case "Black dot":
+                        nodeToAdd.setKeyVisibility(false);
+                        nodeToAdd.setLabelDrawableId(Node.BLACK_DOT_DRAWABLE_ID);
+                        break;
+                }
+            }
+            ((ExpandableNode) node).addChild(nodeToAdd);
+            stage.close();
+            refreshList();
+        });
+
         Scene scene = new Scene(vBox, 100, 100);
         scene.getStylesheets().add(getClass().getResource("../res/styles/dialog_style.css").toExternalForm());
         stage.setScene(scene);
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(mStage);
         stage.show();
-        Button addButton = new Button("Add");
-        addButton.setOnMouseClicked(event -> {
+    }
+
+    private void showEditPopup(String itemSelected) {
+        Stage stage = initializePopup("Edit Info");
+        stage.setTitle("Edit Info");
+
+        VBox vBox = new VBox();
+        vBox.setSpacing(20);
+        vBox.setPadding(new Insets(5, 5, 5, 5));
+        vBox.setAlignment(Pos.CENTER);
+
+        Node node = dataGenerator.queryNode(itemSelected);
+
+        TextArea textContent = new TextArea(node.getValue());
+        DatePicker datePicker = new DatePicker();
+        Button editButton = new Button("Edit");
+
+        vBox.getChildren().addAll(new Label(node.getKey()), textContent, new Label("Select Date"), datePicker);
+        vBox.getChildren().add(editButton);
+
+        editButton.setOnMouseClicked(event -> {
             // todo save fields.
-
-
+            node.setValue(textContent.getText());
             stage.close();
+            refreshList();
         });
-        vBox.getChildren().add(addButton);
-        stage.setHeight(300);
-        stage.setWidth(300);
-        stage.setResizable(false);
 
+        Scene scene = new Scene(vBox, 100, 100);
+        scene.getStylesheets().add(getClass().getResource("../res/styles/dialog_style.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void setContextMenuListener(HBox header, Node node) {
@@ -433,14 +500,6 @@ public class EditorScene {
 
     private HBox getHeader(Node node) {
         HBox headerHBox = new HBox(node.getKeyLabel(), new Label(node.getValue()));
-        //HBox headerHBox = new HBox(new Label(node.getKey()), new Label(node.getValue()));
-        headerHBox.setSpacing(10);
-        headerHBox.setLayoutX(ApplicationUtils.TAB_SIZE * tabMultiplier);
-        return headerHBox;
-    }
-
-    private HBox getEditableHeader(Node node) {
-        HBox headerHBox = new HBox(new Label(node.getKey()), new TextField(node.getValue()));
         headerHBox.setSpacing(10);
         headerHBox.setLayoutX(ApplicationUtils.TAB_SIZE * tabMultiplier);
         return headerHBox;

@@ -163,14 +163,14 @@ public class XmlParser implements Parser {
     private Node getRequestedNode(String queryStr) {
         Element docElement = (Element) document.getElementsByTagName("document").item(0);
         NodeList nList = docElement.getElementsByTagName("node");
-        for (int temp = 1; temp < nList.getLength(); temp++) {
+        for (int temp = 0; temp < nList.getLength(); temp++) {
             org.w3c.dom.Node nNode = nList.item(temp);
-            if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+            //if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                 Element eElement = (Element) nNode;
                 if (eElement.getElementsByTagName("value").item(0).getTextContent().equals(queryStr)) {
                     return getData(eElement);
                 }
-            }
+            //}
         }
         return null;
     }
@@ -202,12 +202,15 @@ public class XmlParser implements Parser {
         Node node = new ExpandableNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
         node.setKeyVisibility(Boolean.parseBoolean(eElement.getElementsByTagName("visible_key").item(0).getTextContent()));
         node.setLabelDrawableId(Integer.parseInt(eElement.getElementsByTagName("drawable_id").item(0).getTextContent()));
-        System.out.println("drawable id " + node.getLabelDrawableId());
+        //System.out.println("drawable id " + node.getLabelDrawableId());
+        System.out.println("add to node " + node.getKey());
         Element elem = (Element) eElement.getElementsByTagName("children").item(0);
         if (elem != null) {
+            /*
             for (Node n : getChildren(elem))
                 System.out.println("elem : " + n.getKey());
             System.out.println();
+            */
             ((ExpandableNode) node).addChildren(getChildren(elem));
         }
         return node;
