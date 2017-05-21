@@ -53,6 +53,7 @@ public abstract class FileChooserUtils {
         fileChooser.setTitle("Export As");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Latex file", "*" + ApplicationUtils.LATEX_FILE_EXTENSION),
+                new FileChooser.ExtensionFilter("Pdf file", "*" + ApplicationUtils.PDF_FILE_EXTENSION),
                 new FileChooser.ExtensionFilter("Text File", "*" + ApplicationUtils.TEXT_FILE_EXTENSION));
     }
 }

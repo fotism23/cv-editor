@@ -13,5 +13,6 @@
     <orderEntry type="library" name="openjfx-dialogs-1.0.3" level="project" />
     <orderEntry type="library" name="Arquillian JUnit:Release" level="project" />
     <orderEntry type="library" name="jlr" level="project" />
+    <orderEntry type="library" name="joda-time-2.9.9" level="project" />
   </component>
 </module>

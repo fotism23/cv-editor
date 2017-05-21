@@ -8,39 +8,45 @@
         <enc_image/>
         <node key="1">
             <value>GENERAL INFORMATION</value>
+            <date>10:10:1900:00:00</date>
             <visible_key>true</visible_key>
             <drawable_id>-1</drawable_id>
             <name>Fotis Mitropoulos</name>
-            <address>Christovasili 34</address>
-            <home>+306975998832</home>
-            <mobile>+306975998832</mobile>
+            <address>Kapou</address>
+            <home>+00000000</home>
+            <mobile>+00000000</mobile>
             <email>fotismitropoulos@gmail.com</email>
             <website/>
         </node>
         <node key="2">
             <value>PROFESSIONAL PROFILE</value>
+            <date>10:10:1900:00:00</date>
             <visible_key>true</visible_key>
             <drawable_id>-1</drawable_id>
             <content/>
         </node>
         <node key="3">
             <value>CORE STRENGTHS</value>
+            <date>10:10:1900:00:00</date>
             <visible_key>true</visible_key>
             <drawable_id>-1</drawable_id>
             <content/>
         </node>
         <node key="4">
             <value>PROFESSIONAL EXPERIENCE</value>
+            <date>10:10:1900:00:00</date>
             <visible_key>true</visible_key>
             <drawable_id>-1</drawable_id>
             <children>
                 <node key="4.1">
                     <value>COMPANY NAME, JOB, TITLE, DATE</value>
+                    <date>10:10:1900:00:00</date>
                     <visible_key>true</visible_key>
                     <drawable_id>-1</drawable_id>
                     <children>
                         <node key="4.1.1">
                             <value>PARAGRAPH OF RESPONSIBILITIES</value>
+                            <date>10:10:1900:00:00</date>
                             <visible_key>false</visible_key>
                             <drawable_id>0</drawable_id>
                         </node>
@@ -48,11 +54,13 @@
                 </node>
                 <node key="4.2">
                     <value>COMPANY NAME, JOB, TITLE, DATE</value>
+                    <date>10:10:1900:00:00</date>
                     <visible_key>true</visible_key>
                     <drawable_id>-1</drawable_id>
                     <children>
                         <node key="4.2.1">
                             <value>PARAGRAPH OF RESPONSIBILITIES</value>
+                            <date>10:10:1900:00:00</date>
                             <visible_key>false</visible_key>
                             <drawable_id>0</drawable_id>
                         </node>
@@ -62,11 +70,13 @@
         </node>
         <node key="5">
             <value>EDUCATION AND TRAINING</value>
+            <date>10:10:1900:00:00</date>
             <visible_key>true</visible_key>
             <drawable_id>-1</drawable_id>
             <children>
                 <node key="5.1">
                     <value>Qualification, Establishment, Location, Date</value>
+                    <date>10:10:1900:00:00</date>
                     <visible_key>false</visible_key>
                     <drawable_id>0</drawable_id>
                 </node>
@@ -74,11 +84,13 @@
         </node>
         <node key="6">
             <value>FURTHER COURSES</value>
+            <date>10:10:1900:00:00</date>
             <visible_key>true</visible_key>
             <drawable_id>-1</drawable_id>
             <children>
                 <node key="6.1">
                     <value>Course, Establishment, Location, Date</value>
+                    <date>10:10:1900:00:00</date>
                     <visible_key>false</visible_key>
                     <drawable_id>0</drawable_id>
                 </node>
@@ -86,12 +98,14 @@
         </node>
         <node key="7">
             <value>ADDITIONAL INFORMATION</value>
+            <date>10:10:1900:00:00</date>
             <visible_key>true</visible_key>
             <drawable_id>-1</drawable_id>
             <content/>
         </node>
         <node key="8">
             <value>INTERESTS</value>
+            <date>10:10:1900:00:00</date>
             <visible_key>true</visible_key>
             <drawable_id>-1</drawable_id>
             <content/>

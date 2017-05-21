@@ -1,7 +1,6 @@
 package app.java;
 
-import app.java.data.DataGenerator;
-import app.java.data.ExpandableNode;
+import app.java.data.ListNode;
 import app.java.data.Node;
 import app.java.data.NodeFactory;
 import app.java.utils.ApplicationUtils;
@@ -24,8 +23,7 @@ import javafx.stage.Stage;
 
 import javax.activation.UnsupportedDataTypeException;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.security.InvalidKeyException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -36,7 +34,7 @@ public class EditorScene {
     private boolean canEdit;
     private boolean hasSavePath;
     private boolean saved;
-    private DataGenerator dataGenerator;
+    private DocumentController documentController;
     private ArrayList<Node> data;
     private VBox dataList;
     private int tabMultiplier = 1;
@@ -52,7 +50,7 @@ public class EditorScene {
     private ImageView avatarImageView;
 
     EditorScene(boolean template, File file) {
-        if (template){
+        if (template) {
             this.hasSavePath = false;
             this.saved = true;
             this.file = file;
@@ -64,11 +62,9 @@ public class EditorScene {
 
     Scene initialize(Stage stage) throws Exception {
         this.mStage = stage;
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource(ApplicationUtils.EDITOR_WINDOW_LAYOUT_FXML));
         Parent root = loader.load();
         namespace = loader.getNamespace();
-
         mStage.setTitle(ApplicationUtils.APPLICATION_TITLE);
         mStage.setResizable(true);
         mStage.setMinHeight(ApplicationUtils.EDITOR_WINDOW_HEIGHT);
@@ -77,14 +73,14 @@ public class EditorScene {
         Scene mScene = new Scene(root, ApplicationUtils.EDITOR_WINDOW_WIDTH, ApplicationUtils.EDITOR_WINDOW_HEIGHT);
 
         this.canEdit = true;
-        initialize();
+        initializeFields();
         initializeMenuItems();
         initializeImageView();
         openFile();
         return mScene;
     }
 
-    private void initialize() {
+    private void initializeFields() {
         nameTextField = (TextField) namespace.get("name");
         addressTextField = (TextField) namespace.get("address");
         phoneTextField = (TextField) namespace.get("home");
@@ -107,15 +103,11 @@ public class EditorScene {
         avatarImageView.maxHeight(169);
         avatarImageView.maxHeight(169);
         avatarImageView.setOnMouseClicked(event -> {
-            File file =  FileChooserUtils.openImageFileChooser(mStage);
+            File file = FileChooserUtils.openImageFileChooser(mStage);
             if (file == null) return;
-            try {
-                Image image = new Image(file.toURL().toString());
-                avatarImageView.setImage(image);
-                dataGenerator.setProfImage(image);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            Image image = new Image("file:///" + file.toString());
+            avatarImageView.setImage(image);
+            documentController.getDocument().setProfImage(image);
         });
     }
 
@@ -160,14 +152,14 @@ public class EditorScene {
 
     private void closeAction() {
         if (saved) mStage.close();
-        else{
+        else {
             saveAction();
             mStage.close();
         }
     }
 
     private void newAction() {
-        if (!saved){
+        if (!saved) {
             saveAction();
         }
         Optional<String> result = ApplicationUtils.showTemplateOptionDialog();
@@ -189,10 +181,15 @@ public class EditorScene {
         if (file == null) return;
         hasSavePath = false;
         try {
+            clearList();
             openFile();
         } catch (UnsupportedDataTypeException e) {
             e.printStackTrace();
         }
+    }
+
+    private void clearList() {
+
     }
 
     private void toggleEdit() {
@@ -207,7 +204,7 @@ public class EditorScene {
     }
 
     private void openAction() {
-        if (!saved){
+        if (!saved) {
             saveAction();
         }
         File file = FileChooserUtils.openFileChooser(mStage);
@@ -239,15 +236,21 @@ public class EditorScene {
     private void exportAction() {
         File file = FileChooserUtils.exportAsFileChooser(mStage);
         if (file == null) return;
-        if (file.getPath().endsWith(".txt")) {
+        if (file.getPath().endsWith(ApplicationUtils.TEXT_FILE_EXTENSION)) {
             try {
-                dataGenerator.exportData(file.getPath(), ApplicationUtils.TEXT_TYPE_ID);
+                documentController.exportData(file.getPath(), ApplicationUtils.TEXT_TYPE_ID);
+            } catch (UnsupportedDataTypeException e) {
+                e.printStackTrace();
+            }
+        } else if (file.getPath().endsWith(ApplicationUtils.PDF_FILE_EXTENSION)){
+            try {
+                documentController.exportData(file.getPath(), ApplicationUtils.LATEX_TYPE_ID);
             } catch (UnsupportedDataTypeException e) {
                 e.printStackTrace();
             }
         } else {
             try {
-                dataGenerator.exportData(file.getPath(), ApplicationUtils.LATEX_TYPE_ID);
+                documentController.exportData(file.getPath(), ApplicationUtils.LATEX_TYPE_ID);
             } catch (UnsupportedDataTypeException e) {
                 e.printStackTrace();
             }
@@ -257,15 +260,15 @@ public class EditorScene {
     private void saveFile() {
         saved = true;
         try {
-            dataGenerator.exportData(file.getPath(), ApplicationUtils.XML_TYPE_ID);
+            documentController.exportData(file.getPath(), ApplicationUtils.XML_TYPE_ID);
         } catch (UnsupportedDataTypeException e) {
             e.printStackTrace();
         }
     }
 
     private void openFile() throws UnsupportedDataTypeException {
-        dataGenerator = new DataGenerator();
-        dataGenerator.importData(file.getPath(), ApplicationUtils.XML_TYPE_ID);
+        documentController = new DocumentController();
+        documentController.importData(file.getPath(), ApplicationUtils.XML_TYPE_ID);
         showData();
     }
 
@@ -276,7 +279,7 @@ public class EditorScene {
     }
 
     private void showProfImage() {
-        Image image = dataGenerator.getProfImage();
+        Image image = documentController.getDocument().getProfImage();
         if (image == null)
             showDefaultImage();
         else
@@ -288,24 +291,20 @@ public class EditorScene {
     }
 
     private void showPersonalInfo() {
-        try {
-            nameTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_NAME));
-            addressTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_ADDRESS));
-            phoneTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_HOME));
-            mobileTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_MOBILE));
-            emailTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_EMAIL));
-            websiteTextField.setText(dataGenerator.queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_WEBSITE));
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
+        nameTextField.setText(documentController.getDocument().queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_NAME));
+        addressTextField.setText(documentController.getDocument().queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_ADDRESS));
+        phoneTextField.setText(documentController.getDocument().queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_HOME));
+        mobileTextField.setText(documentController.getDocument().queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_MOBILE));
+        emailTextField.setText(documentController.getDocument().queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_EMAIL));
+        websiteTextField.setText(documentController.getDocument().queryPersonalInfo(ApplicationUtils.PERSONAL_INFO_WEBSITE));
     }
 
     private void createEditorFields() {
         AnchorPane anchorPane = (AnchorPane) namespace.get("anchorPane");
         anchorPane.setFocusTraversable(false);
-        anchorPane.setPadding(new Insets(0,0,30,0));
+        anchorPane.setPadding(new Insets(0, 0, 30, 0));
 
-        data = dataGenerator.getData();
+        data = documentController.getDocument().getData();
         dataList = new VBox();
         dataList.setLayoutY(300);
         dataList.setLayoutX(50);
@@ -319,19 +318,18 @@ public class EditorScene {
     }
 
     private void addItem() {
-        System.out.println(itemSelected);
         showAddPopup();
         refreshList();
     }
 
     private void removeItem() {
-        dataGenerator.removeElement(itemSelected);
+        documentController.getDocument().removeElement(itemSelected);
         refreshList();
     }
 
     private void refreshList() {
         dataList.getChildren().clear();
-        data = dataGenerator.getData();
+        data = documentController.getDocument().getData();
         for (Node node : data)
             dataList.getChildren().add(getCell(node, false));
 
@@ -396,49 +394,72 @@ public class EditorScene {
         vBox.setPadding(new Insets(5, 5, 5, 5));
         vBox.setAlignment(Pos.CENTER);
 
-        Node node = dataGenerator.queryNode(itemSelected);
-
-        TextField textField = new TextField("Key");
+        String key = documentController.getDocument().getNextAvailableKey(itemSelected);
+        Label keyLabel = new Label(key);
         TextArea textContent = new TextArea("Value");
+
         DatePicker datePicker = new DatePicker();
+
+        if (documentController.getDocument().getTemplate() == ApplicationUtils.CHRONOLOGICAL_TEMPLATE_ID) {
+            LocalDate lastDate = documentController.getDocument().getRangeOfNotAvailableDates(itemSelected);
+            datePicker.setDayCellFactory(ApplicationUtils.getDateCellFactory(lastDate));
+        }
+
         ToggleGroup drawableSelectionGroup = new ToggleGroup();
 
         RadioButton stringDrawableRadioButton = new RadioButton("Text key");
         stringDrawableRadioButton.setSelected(true);
+        stringDrawableRadioButton.setUserData(-1);
         stringDrawableRadioButton.setToggleGroup(drawableSelectionGroup);
 
         RadioButton whiteDotDrawableRadioButton = new RadioButton("White dot");
         whiteDotDrawableRadioButton.setToggleGroup(drawableSelectionGroup);
+        whiteDotDrawableRadioButton.setUserData(Node.WHITE_DOT_DRAWABLE_ID);
 
         RadioButton blackDotDrawableRadioButton = new RadioButton("Black dot");
+        blackDotDrawableRadioButton.setUserData(Node.BLACK_DOT_DRAWABLE_ID);
         blackDotDrawableRadioButton.setToggleGroup(drawableSelectionGroup);
 
         Button addButton = new Button("Add");
+        addButton.setDisable(true);
 
-        vBox.getChildren().addAll(textField, textContent, new Label("Select Date"), datePicker, new HBox(stringDrawableRadioButton, whiteDotDrawableRadioButton, blackDotDrawableRadioButton));
-        vBox.getChildren().add(addButton);
+        final LocalDate[] datePicked = {LocalDate.now()};
+        final int[] drawableId = {-1};
+        final boolean[] keyVisibility = {true};
+
+        datePicker.valueProperty().addListener(((observable, oldValue, newValue) -> {
+            datePicked[0] = newValue;
+            addButton.setDisable(false);
+        }
+        ));
 
         addButton.setOnMouseClicked(event -> {
-            ExpandableNode nodeToAdd = NodeFactory.createNewExpandableNode(textField.getText(), textContent.getText());
             if (drawableSelectionGroup.getSelectedToggle() != null) {
-                switch (drawableSelectionGroup.getUserData().toString()) {
-                    case "Text key":
-                        nodeToAdd.setKeyVisibility(true);
+                switch ((int) drawableSelectionGroup.getSelectedToggle().getUserData()) {
+                    case -1:
+                        keyVisibility[0] = true;
                         break;
-                    case "White dot":
-                        nodeToAdd.setKeyVisibility(false);
-                        nodeToAdd.setLabelDrawableId(Node.WHITE_DOT_DRAWABLE_ID);
+                    case Node.WHITE_DOT_DRAWABLE_ID:
+                        keyVisibility[0] = false;
+                        drawableId[0] = Node.WHITE_DOT_DRAWABLE_ID;
                         break;
-                    case "Black dot":
-                        nodeToAdd.setKeyVisibility(false);
-                        nodeToAdd.setLabelDrawableId(Node.BLACK_DOT_DRAWABLE_ID);
+                    case Node.BLACK_DOT_DRAWABLE_ID:
+                        keyVisibility[0] = false;
+                        drawableId[0] = Node.BLACK_DOT_DRAWABLE_ID;
                         break;
                 }
             }
-            ((ExpandableNode) node).addChild(nodeToAdd);
+
+            ListNode nodeToAdd = NodeFactory.createNewListNode(key, textContent.getText(), datePicked[0]);
+            nodeToAdd.setKeyVisibility(keyVisibility[0]);
+            nodeToAdd.setLabelDrawableId(drawableId[0]);
+            documentController.getDocument().addElement(itemSelected, nodeToAdd);
             stage.close();
             refreshList();
         });
+
+        vBox.getChildren().addAll(keyLabel, textContent, new Label("Select Date"), datePicker, new HBox(stringDrawableRadioButton, whiteDotDrawableRadioButton, blackDotDrawableRadioButton));
+        vBox.getChildren().add(addButton);
 
         Scene scene = new Scene(vBox, 100, 100);
         scene.getStylesheets().add(getClass().getResource("../res/styles/dialog_style.css").toExternalForm());
@@ -455,7 +476,7 @@ public class EditorScene {
         vBox.setPadding(new Insets(5, 5, 5, 5));
         vBox.setAlignment(Pos.CENTER);
 
-        Node node = dataGenerator.queryNode(itemSelected);
+        Node node = documentController.getDocument().queryNode(itemSelected);
 
         TextArea textContent = new TextArea(node.getValue());
         DatePicker datePicker = new DatePicker();
@@ -505,13 +526,13 @@ public class EditorScene {
     }
 
     private VBox getAdditionalData(Node parentNode) {
-        if (parentNode instanceof ExpandableNode)
-            return getNodeChildren((ExpandableNode) parentNode);
+        if (parentNode instanceof ListNode)
+            return getNodeChildren((ListNode) parentNode);
         else
             return getNodeContent(parentNode);
     }
 
-    private VBox getNodeChildren(ExpandableNode parentNode) {
+    private VBox getNodeChildren(ListNode parentNode) {
         VBox vBox = new VBox();
         ArrayList<Node> data = parentNode.getChildren();
         tabMultiplier++;
@@ -524,6 +545,7 @@ public class EditorScene {
 
     private VBox getNodeContent(Node parentNode) {
         TextArea textArea = new TextArea(parentNode.getContent());
+        textArea.textProperty().addListener((observable, oldValue, newValue) -> parentNode.setContent(textArea.getText()));
         textArea.setPrefHeight(50);
         return new VBox(textArea);
     }

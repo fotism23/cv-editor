@@ -2,7 +2,7 @@
 <cv>
     <file_info>
         <last_edit>19:03:2017:14:35</last_edit>
-        <template>0</template>
+        <template>1</template>
     </file_info>
     <document>
         <enc_image/>
@@ -11,9 +11,9 @@
             <visible_key>true</visible_key>
             <drawable_id>-1</drawable_id>
             <name>Fotis Mitropoulos</name>
-            <address>Christovasili 34</address>
-            <home>+306975998832</home>
-            <mobile>+306975998832</mobile>
+            <address>Kapou</address>
+            <home>+00000000</home>
+            <mobile>+00000000</mobile>
             <email>fotismitropoulos@gmail.com</email>
             <website/>
         </node>

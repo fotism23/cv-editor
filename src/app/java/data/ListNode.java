@@ -1,12 +1,14 @@
 package app.java.data;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-public class ExpandableNode extends Node {
+
+public class ListNode extends Node {
 
     private ArrayList<Node> childrenData;
 
-    public ExpandableNode(String key, String value) {
-        super(key, value);
+    public ListNode(String key, String value, LocalDate date) {
+        super(key, value, date);
         super.TAG = this.getClass().getName();
         childrenData = new ArrayList<>();
     }
@@ -15,7 +17,7 @@ public class ExpandableNode extends Node {
         return childrenData;
     }
 
-    public void addChild(Node item) {
+    void addChild(Node item) {
         childrenData.add(item);
     }
 
@@ -23,7 +25,7 @@ public class ExpandableNode extends Node {
         childrenData.addAll(items);
     }
 
-    public boolean removeChild(String key) {
+    boolean removeChild(String key) {
         int index = 0;
         for (Node n : childrenData) {
             if (n.getKey().equals(key)){
@@ -35,14 +37,7 @@ public class ExpandableNode extends Node {
         return false;
     }
 
-    public Node getChild(int index) throws Exception {
-        if (index > childrenData.size() - 1)
-            throw new IndexOutOfBoundsException("Index " + index + " not found.");
-        else
-            return childrenData.get(index);
-    }
-
-    public Node getChild(String key){
+    Node getChild(String key){
         int index = 0;
         for (Node n : childrenData) {
             if (n.getKey().equals(key)){

@@ -20,7 +20,7 @@ public class InitScene {
     private Scene mScene;
     private EditorScene editorScene;
 
-    public Scene initialize(Stage stage) throws Exception{
+    Scene initialize(Stage stage) throws Exception{
         this.mStage = stage;
         Parent root = FXMLLoader.load(getClass().getResource(ApplicationUtils.INIT_WINDOW_LAYOUT_FXML));
         mStage.setTitle(ApplicationUtils.APPLICATION_TITLE);
@@ -41,6 +41,7 @@ public class InitScene {
     private void setButtonListeners() {
         createNewButton.setOnAction(event -> createNewAction());
         openButton.setOnAction(event -> openAction());
+        compareButton.setOnAction(event -> compareAction());
         aboutButton.setOnAction(event -> ApplicationUtils.showAboutDialog()
         );
     }
@@ -48,6 +49,14 @@ public class InitScene {
     private void openAction() {
         File file = FileChooserUtils.openFileChooser(mStage);
         if (file != null) launchEditor(file);
+    }
+
+    private void compareAction() {
+        File leftFile = FileChooserUtils.openFileChooser(mStage);
+        if (leftFile == null) return;
+        File rightFile = FileChooserUtils.openFileChooser(mStage);
+        if (rightFile == null) return;
+        launchComparator(leftFile, rightFile);
     }
 
     private void createNewAction() {
@@ -81,6 +90,15 @@ public class InitScene {
         editorScene = new EditorScene(false, file);
         try {
             mStage.setScene(editorScene.initialize(mStage));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void launchComparator(File leftFile, File rightFile) {
+        ComparatorScene comparatorScene = new ComparatorScene(leftFile, rightFile);
+        try {
+            mStage.setScene(comparatorScene.initialize(mStage));
         } catch (Exception e) {
             e.printStackTrace();
         }

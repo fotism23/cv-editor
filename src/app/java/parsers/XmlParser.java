@@ -1,4 +1,4 @@
-package app.java.utils.parsers;
+package app.java.parsers;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
-import app.java.data.ExpandableNode;
+import app.java.data.ListNode;
 import app.java.data.Node;
+import app.java.data.NodeFactory;
 import app.java.utils.ApplicationUtils;
 import javafx.scene.image.Image;
 import org.w3c.dom.Document;
@@ -39,7 +40,6 @@ public class XmlParser implements Parser {
         Element docElement = (Element) document.getElementsByTagName("document").item(0);
         org.w3c.dom.Node imageElement = docElement.getElementsByTagName("enc_image").item(0);
         Element eElement = (Element) imageElement;
-        System.out.println(eElement.getTextContent());
         if (!eElement.getTextContent().trim().equals("")) {
             try {
                 return ApplicationUtils.decodeImageFromBase64(eElement.getTextContent());
@@ -149,7 +149,7 @@ public class XmlParser implements Parser {
             if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
                 Element eElement = (Element) nNode;
                 if (eElement.getElementsByTagName("value").item(0).getTextContent().equals(queryStr)) {
-                    Node node = new Node(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
+                    Node node = NodeFactory.createNewNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent(), eElement.getElementsByTagName("date").item(0).getTextContent());
                     node.setKeyVisibility(Boolean.parseBoolean(eElement.getElementsByTagName("visible_key").item(0).getTextContent()));
                     node.setLabelDrawableId(Integer.parseInt(eElement.getElementsByTagName("drawable_id").item(0).getTextContent()));
                     node.setContent(retrieveContent(eElement));
@@ -165,12 +165,10 @@ public class XmlParser implements Parser {
         NodeList nList = docElement.getElementsByTagName("node");
         for (int temp = 0; temp < nList.getLength(); temp++) {
             org.w3c.dom.Node nNode = nList.item(temp);
-            //if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-                Element eElement = (Element) nNode;
-                if (eElement.getElementsByTagName("value").item(0).getTextContent().equals(queryStr)) {
-                    return getData(eElement);
-                }
-            //}
+            Element eElement = (Element) nNode;
+            if (eElement.getElementsByTagName("value").item(0).getTextContent().equals(queryStr)) {
+                return getData(eElement);
+            }
         }
         return null;
     }
@@ -183,15 +181,16 @@ public class XmlParser implements Parser {
     }
 
     private ArrayList<Node> getChildren(Element eElement) {
+        Element elem = (Element) eElement.getElementsByTagName("children").item(0);
         ArrayList<Node> children = new ArrayList<>();
-        if (eElement.hasChildNodes()) {
-            NodeList nList = eElement.getElementsByTagName("node");
+        if (eElement.hasChildNodes() && elem != null) {
+            NodeList nList = elem.getElementsByTagName("node");
             for (int temp = 0; temp < nList.getLength(); temp++) {
                 org.w3c.dom.Node nNode = nList.item(temp);
-                if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-                    Element elem = (Element) nNode;
-                    System.out.println("ELEMENT TO ADD : " + getData(elem).getKey());
-                    children.add(getData(elem));
+                if (nNode.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE ) {
+                    Element node = (Element) nNode;
+                    if (node.getAttribute("key").length() == eElement.getAttribute("key").length() + 2)
+                        children.add(getData(node));
                 }
             }
         }
@@ -199,20 +198,10 @@ public class XmlParser implements Parser {
     }
 
     private Node getData(Element eElement) {
-        Node node = new ExpandableNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent());
+        Node node = NodeFactory.createNewListNode(eElement.getAttribute("key"), eElement.getElementsByTagName("value").item(0).getTextContent(), eElement.getElementsByTagName("date").item(0).getTextContent());
         node.setKeyVisibility(Boolean.parseBoolean(eElement.getElementsByTagName("visible_key").item(0).getTextContent()));
         node.setLabelDrawableId(Integer.parseInt(eElement.getElementsByTagName("drawable_id").item(0).getTextContent()));
-        //System.out.println("drawable id " + node.getLabelDrawableId());
-        System.out.println("add to node " + node.getKey());
-        Element elem = (Element) eElement.getElementsByTagName("children").item(0);
-        if (elem != null) {
-            /*
-            for (Node n : getChildren(elem))
-                System.out.println("elem : " + n.getKey());
-            System.out.println();
-            */
-            ((ExpandableNode) node).addChildren(getChildren(elem));
-        }
+        ((ListNode) node).addChildren(getChildren(eElement));
         return node;
     }
 }

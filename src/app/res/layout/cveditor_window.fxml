@@ -14,9 +14,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-           prefHeight="512.0" prefWidth="600.0" styleClass="window"
-           stylesheets="@../styles/editor_window_style.css" xmlns="http://javafx.com/javafx/8.0.112">
+<StackPane xmlns:fx="http://javafx.com/fxml/1"
+           maxHeight="-Infinity"
+           maxWidth="-Infinity"
+           minHeight="-Infinity"
+           minWidth="-Infinity"
+           prefHeight="512.0"
+           prefWidth="600.0"
+           styleClass="window"
+           stylesheets="@../styles/editor_window_style.css"
+           xmlns="http://javafx.com/javafx/8.0.112">
     <children>
         <VBox prefHeight="586.0" prefWidth="600.0">
             <children>
@@ -111,9 +118,11 @@
                 </ScrollPane>
             </children>
         </VBox>
-        <ProgressIndicator maxHeight="-Infinity" maxWidth="-Infinity" stylesheets="@../styles/editor_window_style.css"
-                           visible="false"/>
-
+        <ProgressIndicator
+                maxHeight="-Infinity"
+                maxWidth="-Infinity"
+                stylesheets="@../styles/editor_window_style.css"
+                visible="false"
+        />
     </children>
-
 </StackPane>

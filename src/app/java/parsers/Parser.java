@@ -1,5 +1,4 @@
-package app.java.utils.parsers;
-
+package app.java.parsers;
 
 import app.java.data.Node;
 import javafx.scene.image.Image;

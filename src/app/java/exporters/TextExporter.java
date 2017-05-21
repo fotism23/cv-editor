@@ -1,6 +1,6 @@
-package app.java.utils.exporters;
+package app.java.exporters;
 
-import app.java.data.ExpandableNode;
+import app.java.data.ListNode;
 import app.java.data.Node;
 import app.java.utils.ApplicationUtils;
 import javafx.scene.image.Image;
@@ -99,7 +99,7 @@ public class TextExporter implements Exporter{
 
     @Override
     public void exportCoreStrengths(Node node) {
-        appendNodeData(node);
+        appendContentNodeData(node);
     }
 
     @Override
@@ -122,8 +122,10 @@ public class TextExporter implements Exporter{
         stringBuilder.append(node.getKey());
         stringBuilder.append(". ");
         stringBuilder.append(node.getValue());
+        stringBuilder.append("\t");
+        stringBuilder.append(ApplicationUtils.getStringFormattedDate(node.getDate()));
         stringBuilder.append("\n");
-        appendChildren((ExpandableNode) node);
+        appendChildren((ListNode) node);
         stringBuilder.append("\n");
     }
 
@@ -136,9 +138,9 @@ public class TextExporter implements Exporter{
         stringBuilder.append("\n");
     }
 
-    private void appendChildren(ExpandableNode node) {
+    private void appendChildren(ListNode node) {
         ArrayList<Node> nodes = node.getChildren();
-        if (nodes.size() <= 0) return;
+        if (nodes.isEmpty()) return;
         tabs ++;
         for (Node childNode : nodes) {
             for (int i = 0; i < tabs; i++) {
@@ -148,7 +150,7 @@ public class TextExporter implements Exporter{
             stringBuilder.append("\t");
             stringBuilder.append(childNode.getValue());
             stringBuilder.append("\n");
-            appendChildren((ExpandableNode) childNode);
+            appendChildren((ListNode) childNode);
             stringBuilder.append("\n");
         }
         tabs--;

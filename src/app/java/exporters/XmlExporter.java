@@ -1,6 +1,6 @@
-package app.java.utils.exporters;
+package app.java.exporters;
 
-import app.java.data.ExpandableNode;
+import app.java.data.ListNode;
 import app.java.data.Node;
 import app.java.utils.ApplicationUtils;
 import javafx.scene.image.Image;
@@ -106,6 +106,10 @@ public class XmlExporter implements Exporter {
         element.appendChild(document.createTextNode("true"));
         personalInfoElement.appendChild(element);
 
+        element = document.createElement("date");
+        element.appendChild(document.createTextNode(ApplicationUtils.getStringFormattedCurrentDate()));
+        personalInfoElement.appendChild(element);
+
         element = document.createElement("drawable_id");
         element.appendChild(document.createTextNode("-1"));
         personalInfoElement.appendChild(element);
@@ -139,29 +143,7 @@ public class XmlExporter implements Exporter {
 
     @Override
     public void exportProfessionalProfile(Node node) {
-        Element personalInfoElement = document.createElement("node");
-        personalInfoElement.setAttribute("key", node.getKey());
-
-        Element element = document.createElement("value");
-        element.appendChild(document.createTextNode("PROFESSIONAL PROFILE"));
-        personalInfoElement.appendChild(element);
-
-        element = document.createElement("visible_key");
-        element.appendChild(document.createTextNode("true"));
-        personalInfoElement.appendChild(element);
-
-        element = document.createElement("drawable_id");
-        element.appendChild(document.createTextNode("-1"));
-        personalInfoElement.appendChild(element);
-
-        element = document.createElement("content");
-        if (node.getContent() != null) {
-            element.appendChild(document.createTextNode(node.getContent()));
-        }
-
-        personalInfoElement.appendChild(element);
-
-        documentNode.appendChild(personalInfoElement);
+        documentNode.appendChild(getContentNode(node));
     }
 
     @Override
@@ -196,7 +178,7 @@ public class XmlExporter implements Exporter {
 
     @Override
     public void exportCoreStrengths(Node node) {
-        documentNode.appendChild(getNode(node));
+        documentNode.appendChild(getContentNode(node));
     }
 
     @Override
@@ -214,6 +196,10 @@ public class XmlExporter implements Exporter {
 
         element = document.createElement("visible_key");
         element.appendChild(document.createTextNode(Boolean.toString(node.getKeyVisibility())));
+        contentElement.appendChild(element);
+
+        element = document.createElement("date");
+        element.appendChild(document.createTextNode(ApplicationUtils.getStringFormattedDate(node.getDate())));
         contentElement.appendChild(element);
 
         element = document.createElement("drawable_id");
@@ -245,12 +231,16 @@ public class XmlExporter implements Exporter {
         element.appendChild(document.createTextNode(Integer.toString(node.getLabelDrawableId())));
         nodeToReturn.appendChild(element);
 
-        nodeToReturn.appendChild(getChildren((ExpandableNode) node));
+        element = document.createElement("date");
+        element.appendChild(document.createTextNode(ApplicationUtils.getStringFormattedDate(node.getDate())));
+        nodeToReturn.appendChild(element);
+
+        nodeToReturn.appendChild(getChildren((ListNode) node));
 
         return nodeToReturn;
     }
 
-    private Element getChildren(ExpandableNode node) {
+    private Element getChildren(ListNode node) {
         ArrayList<Node> nodes = node.getChildren();
         Element elem = document.createElement("children");
         if (nodes.size() <= 0) return elem;
@@ -259,7 +249,11 @@ public class XmlExporter implements Exporter {
             Element element = document.createElement("node");
             element.setAttribute("key", node.getKey() + "." + (temp + 1));
 
-            Element subElem = document.createElement("visible_key");
+            Element subElem = document.createElement("value");
+            subElem.appendChild(document.createTextNode(nodes.get(temp).getValue()));
+            element.appendChild(subElem);
+
+            subElem = document.createElement("visible_key");
             subElem.appendChild(document.createTextNode(Boolean.toString(nodes.get(temp).getKeyVisibility())));
             element.appendChild(subElem);
 
@@ -267,7 +261,11 @@ public class XmlExporter implements Exporter {
             subElem.appendChild(document.createTextNode(Integer.toString(nodes.get(temp).getLabelDrawableId())));
             element.appendChild(subElem);
 
-            Element children = getChildren((ExpandableNode) nodes.get(temp));
+            subElem = document.createElement("date");
+            subElem.appendChild(document.createTextNode(ApplicationUtils.getStringFormattedDate(nodes.get(temp).getDate())));
+            element.appendChild(subElem);
+
+            Element children = getChildren((ListNode) nodes.get(temp));
             if (children != null)
                 element.appendChild(children);
             elem.appendChild(element);

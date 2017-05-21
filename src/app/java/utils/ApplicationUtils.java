@@ -3,12 +3,11 @@ package app.java.utils;
 import app.java.InitScene;
 import app.java.Main;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.DialogPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.apache.commons.codec.binary.Base64;
+import javafx.util.Callback;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -16,6 +15,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +34,9 @@ public final class ApplicationUtils {
 
     public static final int EDITOR_WINDOW_WIDTH = 900;
     public static final int EDITOR_WINDOW_HEIGHT = 900;
+
     public static final String EDITOR_WINDOW_LAYOUT_FXML = "../res/layout/cveditor_window.fxml";
+    public static final String COMPARATOR_WINDOW_LAYOUT_FXML = "../res/layout/comparator_window.fxml";
 
     public static final String BLACK_DOT_PATH = "../res/drawable/black_dot.png";
     public static final String WHITE_DOT_PATH = "../res/drawable/white_dot.png";
@@ -42,12 +47,13 @@ public final class ApplicationUtils {
 
     public static final String LATEX_FILE_EXTENSION = ".tex";
     public static final String TEXT_FILE_EXTENSION = ".txt";
+    public static final String PDF_FILE_EXTENSION = ".pdf";
 
     public static final String APPLICATION_FILE_EXTENSION = ".cv";
 
-    public static final int FUNCTIONAL_TEMPLATE_ID = 0;
-    public static final int CHRONOLOGICAL_TEMPLATE_ID = 1;
-    public static final int COMBINED_TEMPLATE_ID = 2;
+    public static final int FUNCTIONAL_TEMPLATE_ID = 2;
+    public static final int CHRONOLOGICAL_TEMPLATE_ID = 0;
+    public static final int COMBINED_TEMPLATE_ID = 1;
 
     public static final int XML_TYPE_ID = 0;
     public static final int LATEX_TYPE_ID = 1;
@@ -68,12 +74,11 @@ public final class ApplicationUtils {
     public static final String ADDITIONAL_INFORMATION = "ADDITIONAL INFORMATION";
     public static final String INTERESTS_VALUE = "INTERESTS";
     public static final String CORE_STRENGTHS_VALUE = "CORE STRENGTHS";
-    public static final String PROFESSIONAL_EXPERIENCE_VALUE = "PROFESSIONAL_EXPERIENCE";
+    public static final String PROFESSIONAL_EXPERIENCE_VALUE = "PROFESSIONAL EXPERIENCE";
 
     public static final int TAB_SIZE = 20;
 
-    public static final String TEX_TEMPLATE_PATH = "src/app/res/templates/template.tex";
-    public static final String TEMPLATE_DIRECTORY_PATH = "src/app/res/templates/";
+    public static final String TEX_TEMP_DIRECTORY = "src/app/res/temp/";
 
     public static String encodeImageToBase64(Image image) throws IOException {
         BufferedImage swingImage = SwingFXUtils.fromFXImage(image, null);
@@ -102,6 +107,14 @@ public final class ApplicationUtils {
     public static String getStringFormattedCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:yyyy:HH:mm");
         return sdf.format(new Date());
+    }
+
+    public static String getStringFormattedDate(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd:MM:yyyy");
+        LocalDateTime ldt;
+        ldt = LocalDateTime.of(date, LocalTime.now());
+
+        return formatter.format(ldt);
     }
 
     public static void showAboutDialog() {
@@ -142,5 +155,27 @@ public final class ApplicationUtils {
         dialog.getDialogPane().getStylesheets().add(Main.class.getResource("../res/styles/dialog_style.css").toExternalForm());
         dialog.getDialogPane().getStyleClass().add("myDialog");
         return dialog.showAndWait();
+    }
+
+    public static Callback<DatePicker, DateCell> getDateCellFactory(LocalDate lastDate) {
+        return new Callback<DatePicker, DateCell>() {
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item.isBefore(lastDate)) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;");
+                        }
+                    }
+                };
+            }
+        };
+    }
+
+    public static LocalDate formatDateFromString(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd:MM:yyyy");
+        return LocalDate.parse(date.substring(0, 10), formatter);
     }
 }

@@ -5,6 +5,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 
+import java.time.LocalDate;
+
 import static app.java.utils.ApplicationUtils.*;
 
 public class Node {
@@ -19,12 +21,14 @@ public class Node {
     private boolean isKeyVisible;
     private int drawableId;
     private String content;
+    private LocalDate date;
 
-    public Node(String key, String value) {
+    public Node(String key, String value, LocalDate date) {
         this.key = key;
         this.valueTextField = new TextField();
         this.valueTextField.setText(value);
         this.drawableId = UNINITIALIZED;
+        this.date = date;
     }
 
     public javafx.scene.Node getKeyLabel() {
@@ -33,6 +37,7 @@ public class Node {
         else
             try {
                 return getDotLabel();
+                //return getTextLabel();
             } catch (Exception e) {
                 e.printStackTrace();
                 return getTextLabel();
@@ -55,6 +60,14 @@ public class Node {
             return blackDotImageView();
         else
             return whiteDotImageView();
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     private ImageView blackDotImageView() {

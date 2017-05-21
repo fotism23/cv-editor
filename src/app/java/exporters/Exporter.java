@@ -1,4 +1,4 @@
-package app.java.utils.exporters;
+package app.java.exporters;
 
 import app.java.data.Node;
 import javafx.scene.image.Image;
